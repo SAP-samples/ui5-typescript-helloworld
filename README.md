@@ -12,7 +12,7 @@ There is also [a detailed step-by-step guide](step-by-step.md), which explains h
 
 | :point_up: Overview of TypeScript-related Entities |
 |:---------------------------|
-| The UI5 type definitions (`*.d.ts` files) are loaded as dev dependency from [npm](https://www.npmjs.com/package/@openui5/ts-types-esm).<br/>
+| The UI5 type definitions (`*.d.ts` files) are loaded as dev dependency from [npm](https://www.npmjs.com/package/@openui5/ts-types-esm). They are work in progress, so while they should be working well already, we are still improving them, which might also lead to breaking changes.<br/>
  The file [tsconfig.json](tsconfig.json) contains the configuration for the TypeScript compilation, including a reference to these UI5 `*.d.ts` files.<br/>
  Normally, the UI5 JavaScript files (controllers, Component.js etc.) would reside in the `webapp` folder. Now they are in the [src](src) folder. The TypeScript compilation will create the `webapp` folder and put all output there. <br/>
  In addition to the TypeScript compilation, there is also a conversion from the ES6 module and class syntax used in the source files to the classic UI5 module loading and class definition syntax (`sap.ui.define(...)` and `superClass.extend(...)`). This conversion is using the [babel-plugin-transform-modules-ui5](https://github.com/r-murphy/babel-plugin-transform-modules-ui5) project from Ryan Murphy. <br/> 
@@ -29,14 +29,12 @@ Either [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/) for depende
 
 1. Clone the project:
 
-<!-- git clone https://github.com/SAP-samples/ui5-typescript-helloworld.git -->
 ```sh
-git clone git@github.wdf.sap.corp:ui5-typescript/ui5-typescript-helloworld.git
+git clone https://github.com/SAP-samples/ui5-typescript-helloworld.git
 cd ui5-typescript-helloworld
 ```
     
-(or download from https://github.wdf.sap.corp/ui5-typescript/ui5-typescript-helloworld/archive/main.zip)
-<!-- https://github.com/SAP-samples/ui5-typescript-helloworld/archive/main.zip -->
+(or download from https://github.com/SAP-samples/ui5-typescript-helloworld/archive/main.zip)
 
 2. Use npm (or yarn) to install the dependencies:
 
@@ -66,7 +64,7 @@ In the browser, you can directly debug the original TypeScript code, which is su
 
 ## Build the App
 
-### Unoptimized (but fast)
+### Unoptimized (but quick)
 Execute the following command to build the project and get an app that can be deployed:
 
 ```sh
@@ -125,7 +123,7 @@ npm run lint
 
 ## Limitations
 
-- At this time, the eslint rules are not verified to be optimal or to be in sync with UI5 recommendations.
+- At this time, the used eslint rules are not verified to be optimal or to be in sync with UI5 recommendations.
 
 
 ## Known Issues
@@ -143,8 +141,9 @@ Questions can be [asked in SAP Community](https://answers.sap.com/questions/ask.
 <!-- ## Contributing -->
 
 
-<!-- ## References -->
+## References
 
+Once you have understood the setup and want to inspect the code of a slightly more comprehensive UI5 app written in TypeScript, you can check out the [TypeScript version of the UI5 CAP Event App Sample](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript).
 
 
 ## License
