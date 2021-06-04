@@ -6,7 +6,7 @@ This app demonstrates a TypeScript setup for developing UI5 applications.
 
 As the focus is on the TypeScript setup, the app code itself is quite minimal, it is not using models, translation files etc.
 
-There is also [a detailed step-by-step guide](step-by-step.md), which explains how this setup is created and how all the bits and pieces fit together! 
+<b>This repository also contains [a detailed step-by-step guide](step-by-step.md), which explains how this setup is created and how all the bits and pieces fit together</b> 
 
 
 
