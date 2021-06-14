@@ -1,5 +1,7 @@
 # A Small TypeScript UI5 Example App
 
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/ui5-typescript-helloworld)](https://api.reuse.software/info/github.com/SAP-samples/ui5-typescript-helloworld)
+
 ## Description
 
 This app demonstrates a TypeScript setup for developing UI5 applications.
