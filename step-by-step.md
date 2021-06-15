@@ -274,7 +274,7 @@ In the configuration file all kinds of details regarding the single ESLint rules
 
 To extend the now-complete TypeScript setup into a complete app development setup in the rest of this tutorial, we need a complete and runnable app.
 
-Please copy the entire content of this repository's [src](src) directory (you can [download the entire repository from here as zip file](archive/refs/heads/main.zip)) into your local project's `src` directory. Make sure to also replace the dummy `Component.ts` file we have used so far!
+Please copy the entire content of this repository's [src](src) directory (you can [download the entire repository from here as zip file](blob/main/archive/refs/heads/main.zip)) into your local project's `src` directory. Make sure to also replace the dummy `Component.ts` file we have used so far!
 
 Alternatively, you could of course also develop your own UI5 app in TypeScript within the "src" folder.
 
