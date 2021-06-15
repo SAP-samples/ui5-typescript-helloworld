@@ -70,25 +70,32 @@ Note that the scope of this tutorial is the TypeScript setup of a project, not t
 
 Now, let's get the TypeScript compiler and the UI5 and jQuery type definitions:
 ```sh
-npm install --save-dev typescript @openui5/ts-types-esm@1.90.1 @types/jquery@3.5.1 @types/qunit@2.5.4
+npm install --save-dev typescript @types/openui5@1.91.0 @types/jquery@3.5.1 @types/qunit@2.5.4
 ```
 
-When you are developing a SAPUI5 application (i.e. also using control librariess which are not available in OpenUI5), use the `@sapui5/ts-types-esm` types instead of the @openui5 ones.<br>
+When you are developing a SAPUI5 application (i.e. also using control librariess which are not available in OpenUI5), use the `@sapui5/ts-types-esm` types instead of the `@types/openui5` ones.
+
+There are also `@openui5/ts-types-esm` types available, how do they differ from the `@types/openui5` ones? The only difference is in versioning: while the types in the `@openui5` namespace are exactly in sync with the respective OpenUI5 release, the ones in the `@types` namespace follow the DefinitelyTyped versioning and are only released once per minor release of OpenUI5 (more details [here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#versioning)). In practice it shouldn't make a difference what you use, but note that in the `@types` namespace there is usually only the *.*.0 patch release available.
+<br>
+The SAPUI5 types are not available in the `@types` namespace.
+
+
 We are installing concrete versions here to make sure the type definitions match the used UI5 code and the jQuery version coming with it.<br>
 Types for other libraries would need to be added the same way.
 
-When you now execute 
+Now execute 
 
 ```sh
 npx tsc src/Component.ts
 ```
 
-the TypeScript compiler tries to compile the component file, but it complains because it does not know the UI5 modules.<br>
 (The `npx` command runs the subsequently written npm module from within the "node_modules" folder, so it does not need to be installed globally.)
 
-Actually, there is some Component.<b>js</b> file created inside the "src" folder, but the content is really weird and bloated. Please delete this file to avoid downstream issues! 
+The TypeScript compiler tries to compile the component file, but it complains because it finds some unknown JavaScript classes ("Iterator", "Generator") in the UI5 type definitions. This is because TypeScript by default works with a pretty old language level of JavaScript (ES3) and we need to tell it to accept a newer language level (ES2015/ES6).<br>
 
-So we need to add a `tsconfig.json` configuration file to tell it where to find the type definitions. Add a file with this name and the following content to the root of the project:
+Actually, there is some Component.<b>js</b> file created inside the "src" folder, but the content is really weird and bloated. <b>Please delete this file to avoid downstream issues!</b> 
+
+So we need to add a `tsconfig.json` configuration file to configure the right language level. Add a file with this name and the following content to the root of the project:
 
 ```json
 {
@@ -105,10 +112,6 @@ So we need to add a `tsconfig.json` configuration file to tell it where to find 
         "rootDir": "./src",
         "outDir": "./dist",
         "baseUrl": "./",
-        "typeRoots": [
-            "./node_modules/@types",
-            "./node_modules/@openui5/ts-types-esm"
-        ],
         "paths": {
             "ui5/typescript/helloworld/*": [
                 "./src/*"
@@ -121,11 +124,20 @@ So we need to add a `tsconfig.json` configuration file to tell it where to find 
 }
 ```
 
-TypeScript automatically finds all type definition files in a dependency starting with "@types/..." (i.e. all *.d.ts files in `node_modules/@types/...`). The jQuery d.ts files are there and found, but the UI5 types are (right now) only in a package starting with "@openui5/", hence they must be loaded by explicitly mentioning in the "typeRoots" section. As this disables the automatic loading of other types from `node_modules/@types/...`, this path must also be given as a type root. 
+Note: when you use the `@sapui5/ts-types-esm` (or `@openui5/ts-types-esm`) types instead, you need to add the following section to tsconfig.json:
+
+```json
+        "typeRoots": [
+            "./node_modules/@types",
+            "./node_modules/@sapui5/ts-types-esm"
+        ],
+```
+
+Why? TypeScript automatically finds all type definition files in a dependency starting with "@types/..." (i.e. all *.d.ts files in `node_modules/@types/...`). The jQuery d.ts files are there and found, but the SAPUI5 types are only in a package starting with "@sapui5/", hence they must be loaded by explicitly mentioning them in the "typeRoots" section. As this disables the automatic loading of other types from `node_modules/@types/...`, this path must also be given as a type root. 
 
 There are additional settings in this file, e.g. telling the compiler which files to compile (all matching "./src/**/*") and where to put the compiled results (to "./dist"). And a couple of compiler options which are not so important right now. They determine how exactly the compiler behaves. The "paths" section informs TypeScript about the mapping of namespaces used in the app.
 
-Now you can do the following in the root directory of your project and as result you will find a compiled JavaScript file in the automatically created "dist" folder:
+Now you can do the following <b>in the root directory</b> of your project. TypeScript will pick up all the settings and as result you will find a compiled JavaScript file in the automatically created "dist" folder:
 
 ```sh
 npx tsc
@@ -205,7 +217,7 @@ sap.ui.define(["sap/ui/core/UIComponent"], function (UIComponent) {
   const Component = UIComponent.extend("ui5.typescript.helloworld.Component", {
 ```
 
-This means the complete build setup is now done!
+This means the complete TypeScript build setup is now done!
 
 
 
@@ -245,7 +257,7 @@ ESLint needs to be told which plug-ins to use and which JavaScript language leve
 By executing
 
 ```sh
-npx eslint src
+npx eslint
 ```
 
 the TypeScript code can now be checked for syntax and style problems.
@@ -262,7 +274,7 @@ In the configuration file all kinds of details regarding the single ESLint rules
 
 To extend the now-complete TypeScript setup into a complete app development setup in the rest of this tutorial, we need a complete and runnable app.
 
-Please copy the entire content of this repository's [src](src) directory (you can [download the entire repository from here as zip file](archive/main.zip)) into your local project's `src` directory. Make sure to also replace the dummy `Component.ts` file we have used so far!
+Please copy the entire content of this repository's [src](src) directory (you can [download the entire repository from here as zip file](archive/refs/heads/main.zip)) into your local project's `src` directory. Make sure to also replace the dummy `Component.ts` file we have used so far!
 
 Alternatively, you could of course also develop your own UI5 app in TypeScript within the "src" folder.
 
@@ -288,7 +300,7 @@ metadata:
 type: application
 framework:
   name: OpenUI5
-  version: "1.90.1"
+  version: "1.91.0"
   libraries:
     - name: sap.m
     - name: sap.ui.core
@@ -400,7 +412,7 @@ resources:
       webapp: dist
 framework:
   name: OpenUI5
-  version: "1.90.1"
+  version: "1.91.0"
   libraries:
     - name: sap.m
     - name: sap.ui.core

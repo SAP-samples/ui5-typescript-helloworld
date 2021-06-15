@@ -12,10 +12,6 @@
         "rootDir": "./src",
         "outDir": "./dist",
         "baseUrl": "./",
-        "typeRoots": [
-            "./node_modules/@types",
-            "./node_modules/@openui5/ts-types-esm"
-        ],
         "paths": {
             "ui5/typescript/helloworld/*": [
                 "./src/*"

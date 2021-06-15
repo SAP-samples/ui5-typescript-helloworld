@@ -5,7 +5,7 @@ import AppComponent from "../Component";
 /**
  * @namespace ui5.typescript.helloworld.controller
  */
-export default class AppController extends Controller {
+export default class App extends Controller {
 
 	public onInit() : void {
 		// apply content density mode to root view
