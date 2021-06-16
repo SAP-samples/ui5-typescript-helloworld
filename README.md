@@ -10,7 +10,7 @@ As the focus is on the TypeScript setup, the app code itself is quite minimal, i
 
 <b>This repository also contains [a detailed step-by-step guide](step-by-step.md), which explains how this setup is created and how all the bits and pieces fit together</b> 
 
-
+<b>The [TypeScript branch of the "UI5 CAP Event App"](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript) sample demonstrates a slightly more complex application, using the same setup. It comes with an [explanation](https://github.com/SAP-samples/ui5-cap-event-app/blob/typescript/docs/typescript.md) of what UI5 TypeScript code usually looks like and what to consider.</b>
 
 | :point_up: Overview of TypeScript-related Entities |
 |:---------------------------|
