@@ -12,6 +12,10 @@ As the focus is on the TypeScript setup, the app code itself is quite minimal, i
 
 <b>The [TypeScript branch of the "UI5 CAP Event App"](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript) sample demonstrates a slightly more complex application, using the same setup. It comes with an [explanation](https://github.com/SAP-samples/ui5-cap-event-app/blob/typescript/docs/typescript.md) of what UI5 TypeScript code usually looks like and what to consider.</b>
 
+<b>The UI5con 2021 session on TypeScript ([recording available at YouTube](https://www.youtube.com/watch?v=aXzcsOZH4q8)) explains the overall approach for TypeScript and UI5.</b>
+
+<b>There is also an [application template](https://github.com/ui5-community/generator-ui5-ts-app) (based on yeoman and easy-ui5) which has been shown in the [UI5con Keynote](https://www.youtube.com/watch?v=aXzcsOZH4q8) and explained in [this blog](https://blogs.sap.com/2021/07/01/getting-started-with-typescript-for-ui5-application-development/).</b>
+
 | :point_up: Overview of TypeScript-related Entities |
 |:---------------------------|
 | The UI5 type definitions (`*.d.ts` files) are loaded as dev dependency from [npm](https://www.npmjs.com/package/@openui5/ts-types-esm). They are work in progress, so while they should be working well already, we are still improving them, which might also lead to breaking changes.<br/>
