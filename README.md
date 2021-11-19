@@ -8,7 +8,9 @@ This app demonstrates a TypeScript setup for developing UI5 applications.
 
 As the focus is on the TypeScript setup, the app code itself is quite minimal, it is not using models, translation files etc.
 
-<b>This repository also contains [a detailed step-by-step guide](step-by-step.md), which explains how this setup is created and how all the bits and pieces fit together</b> 
+<b>This repository also contains [a detailed step-by-step guide](step-by-step.md), which explains how this setup is created and how all the bits and pieces fit together</b>
+
+<b>In the [custom-controls](https://github.com/SAP-samples/ui5-typescript-helloworld/tree/custom-controls) branch, this repository also contains instructions and an example how custom controls can be developed in TypeScript within applications.</b>
 
 <b>The [TypeScript branch of the "UI5 CAP Event App"](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript) sample demonstrates a slightly more complex application, using the same setup. It comes with an [explanation](https://github.com/SAP-samples/ui5-cap-event-app/blob/typescript/docs/typescript.md) of what UI5 TypeScript code usually looks like and what to consider.</b>
 
