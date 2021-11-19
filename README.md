@@ -6,7 +6,7 @@
 
 This app demonstrates a TypeScript setup for developing UI5 applications. However, the code in this *branch* and this document <b>focus on the development of custom controls</b> within applications.
 
-For an explanation of the overall project, please check out the [README file on the `main` branch](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/README.md) and the [detailed step-by-stepg guide](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/step-by-step.md) for creating the setup.
+For an explanation of the overall project, please check out the [README file on the `main` branch](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/README.md) and the [detailed step-by-step guide](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/step-by-step.md) for creating the setup.
 
 ## Developing Custom Controls in TypeScript
 
@@ -16,7 +16,7 @@ This section assumes that you understand the [TypeScript setup](https://github.c
 git clone https://github.com/SAP-samples/ui5-typescript-helloworld.git
 ```
 
-If you don't want to do all the setup steps, you can get the end result by switching to the `custom-controls` branch after cloning the repository:
+If you don't want to do all the setup steps for enabling control development, you can get the end result by switching to the `custom-controls` branch after cloning the repository:
 ```sh
 git checkout custom-controls
 ```
@@ -42,7 +42,7 @@ import RenderManager from "sap/ui/core/RenderManager";
  */
 class MyControl extends Control {
  
-    static metadata = {
+    static readonly metadata = {
         properties: {
             "text": "string"
         }
@@ -203,9 +203,9 @@ This generates a `MyControl.generated.tsinterface.ts` with the missing method de
 
 ### Make the Generated Interface Work
 
-The error in MyControl.ts has not vanished yet, there are two more steps to do. Luckily, they are one-time steps per control, sonce they are done, you can change the control as you like and you will not need to do them again.
+The error in MyControl.ts has not vanished yet, there are two more steps to do. Luckily, they are one-time steps per control, so once they are done, you can change the control as you like and you will not need to do them again:
 
-#### Add the Constructor Signatures
+#### 1. Add the Constructor Signatures
 
 In the command output of the generator, you see the following block:
 ```
@@ -219,18 +219,20 @@ constructor(id?: string, settings?: $MyControlSettings) { super(id, settings); }
 ===== END =====
 ``` 
 
-So please copy the block between `===== BEGIN =====` and `===== END =====` into your original class implementation inside `MyControl.ts`.
+So please copy the block between `===== BEGIN =====` and `===== END =====` into your original class implementation inside `MyControl.ts`. A good location would be right at the beginning, before the metadata defeinition.
 
-#### Connect the Generated Interface to the Control
+#### 2. Connect the Generated Interface to the Control
 
-To make Module Augmentation work, the control must also be exported by its name (not as default export), so you need to add the first of the following two lines to MyControl.js:
+To make Module Augmentation work, the control must also be exported by its name (not only as default export), so you need to add the first of the following two lines to MyControl.js:
 
 ```js
-export {MyControl};
+export { MyControl }; // needed for merging the generated interface
 export default MyControl;
 ```
 
-The error in MyControl.ts is gone now.
+(This causes `MyControl.MyControl` to exist at runtime, which is not intended. There is a [proposal](https://github.com/r-murphy/babel-plugin-transform-modules-ui5/pull/67) how to get rid of this in the UI5 transformer plugin.)
+
+The error in `MyControl.ts` is gone now.
 
 Congratulations! That's it!
 You can now extend the control or develop more of them.
@@ -277,13 +279,14 @@ None.
 
 The sample code is provided **as-is**. No support is provided.
 
-[Create an issue](https://github.com/SAP-samples/ui5-typescript-helloworld/issues) in this repository if you find a bug.
-Questions can be [asked in SAP Community](https://answers.sap.com/questions/ask.html).
+However, you are welcome to [reate an issue](https://github.com/SAP-samples/ui5-typescript-helloworld/issues) in this repository or to submit a pull request if you find a bug or want to suggest an improvement.
 
 <!-- ## Contributing -->
 
 
 ## References
+
+The <b>main entry point</b> for all TypeScript documentation related to UI5 is at: <b>https://sap.github.io/ui5-typescript</b>
 
 Once you have understood the setup and want to inspect the code of a slightly more comprehensive UI5 app written in TypeScript, you can check out the [TypeScript version of the UI5 CAP Event App Sample](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript).
 
