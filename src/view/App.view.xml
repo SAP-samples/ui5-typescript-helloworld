@@ -6,8 +6,8 @@
 	xmlns:cc="ui5.typescript.helloworld.control">
 
 	<App id="app">
-		<Page title="Hello World">
-			<cc:MyControl text="Hello World" />
+		<Page title="My App">
+			<cc:MyControl text="Hello World from the custom control!" />
 		</Page>
 	</App>
 </mvc:View>

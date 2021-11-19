@@ -14,6 +14,7 @@ This section assumes that you understand the [TypeScript setup](https://github.c
 
 ```sh
 git clone https://github.com/SAP-samples/ui5-typescript-helloworld.git
+cd ui5-typescript-helloworld
 ```
 
 If you don't want to do all the setup steps for enabling control development, you can get the end result by switching to the `custom-controls` branch after cloning the repository:
@@ -25,6 +26,12 @@ In the end, in any case, install the dependencies, including the needed UI5 type
 
 ```sh
 npm install
+```
+
+If you have already switched to the `custom-controls` branch (or completed the steps below), you can run the app including the custom control now by doing:
+
+```sh
+npm start
 ```
 
 ### Creating a UI5 Control in TypeScript
@@ -94,8 +101,8 @@ Such a control is used just like other controls: declare the namespace and use t
 	xmlns:cc="ui5.typescript.helloworld.control">
 
 	<App id="app">
-		<Page title="Hello World">
-			<cc:MyControl text="Hello World" />
+		<Page title="My App">
+			<cc:MyControl text="Hello World from the custom control!" />
 		</Page>
 	</App>
 </mvc:View>
@@ -200,6 +207,10 @@ To easily start this when needed, you can add the following line to the "scripts
 ```
 
 This generates a `MyControl.generated.tsinterface.ts` with the missing method definitions and constructor settings object type and re-generates it whenever any of the TypeScript files changes.
+
+It is recommended to either keep this generator running in watch mode whenever you are doing changes to any control metadata or to run it once whenever such changes are completed.
+
+The `start` script configured in `package.json` only runs the TypeScript transpilation in watch mode (and reloads the browser page automatically), the `watch` script in addition also re-generates the TypeScript interfaces for controls whenever anything changes.
 
 ### Make the Generated Interface Work
 

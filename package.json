@@ -11,6 +11,7 @@
     "build:ui5": "ui5 build --clean-dest",
     "build:ui5:opt": "ui5 build self-contained --clean-dest --all",
     "start": "npm-run-all --parallel watch:ts start:ui5",
+    "watch": "npm-run-all --parallel watch:controls watch:ts start:ui5",
     "watch:controls": "npx @ui5/ts-interface-generator --watch",
     "watch:ts": "babel src --out-dir webapp --source-maps inline --extensions \".ts,.js\" --copy-files --watch",
     "start:ui5": "ui5 serve --port 8080 -o index.html",
