@@ -8,6 +8,26 @@ This app demonstrates a TypeScript setup for developing UI5 applications. Howeve
 
 For an explanation of the overall project, please check out the [README file on the `main` branch](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/README.md) and the [detailed step-by-step guide](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/step-by-step.md) for creating the setup.
 
+
+## Table of Contents
+
+  * [Developing Custom Controls in TypeScript](#developing-custom-controls-in-typescript)
+    + [Creating a UI5 Control in TypeScript](#creating-a-ui5-control-in-typescript)
+    + [Using the Custom Control](#using-the-custom-control)
+    + [Build and Run](#build-and-run)
+    + [The Problem of the Missing Runtime-Generated Methods](#the-problem-of-the-missing-runtime-generated-methods)
+    + [Use the UI5 TS Interface Generator](#use-the-ui5-ts-interface-generator)
+    + [Make the Generated Interface Work](#make-the-generated-interface-work)
+      - [1. Add the Constructor Signatures](#1-add-the-constructor-signatures)
+      - [2. Connect the Generated Interface to the Control](#2-connect-the-generated-interface-to-the-control)
+  * [Debug the App](#debug-the-app)
+  * [Check the Code](#check-the-code)
+  * [Limitations](#limitations)
+  * [Known Issues](#known-issues)
+  * [How to Obtain Support](#how-to-obtain-support)
+  * [References](#references)
+  * [License](#license)
+
 ## Developing Custom Controls in TypeScript
 
 This section assumes that you understand the [TypeScript setup](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/step-by-step.md) for UI5 app development and have a TypeScript-based UI5 application project available. You can e.g. use the regular "TypeScript Hello World" app and follow this document step-by-step to add a custom control and the required development setup:
