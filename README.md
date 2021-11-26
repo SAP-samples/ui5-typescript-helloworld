@@ -17,9 +17,7 @@ For an explanation of the overall project, please check out the [README file on 
     + [Build and Run](#build-and-run)
     + [The Problem of the Missing Runtime-Generated Methods](#the-problem-of-the-missing-runtime-generated-methods)
     + [Use the UI5 TS Interface Generator](#use-the-ui5-ts-interface-generator)
-    + [Make the Generated Interface Work](#make-the-generated-interface-work)
-      - [1. Add the Constructor Signatures](#1-add-the-constructor-signatures)
-      - [2. Connect the Generated Interface to the Control](#2-connect-the-generated-interface-to-the-control)
+    + [Add the Constructor Signatures](#add-the-constructor-signatures)
   * [Debug the App](#debug-the-app)
   * [Check the Code](#check-the-code)
   * [Limitations](#limitations)
@@ -232,16 +230,14 @@ It is recommended to either keep this generator running in watch mode whenever y
 
 The `start` script configured in `package.json` only runs the TypeScript transpilation in watch mode (and reloads the browser page automatically), the `watch` script in addition also re-generates the TypeScript interfaces for controls whenever anything changes.
 
-### Make the Generated Interface Work
+### Add the Constructor Signatures
 
-The error in MyControl.ts has not vanished yet, there are two more steps to do. Luckily, they are one-time steps per control, so once they are done, you can change the control as you like and you will not need to do them again:
-
-#### 1. Add the Constructor Signatures
-
-In the command output of the generator, you see the following block:
+There is one more thing to make the generated interface fully work and to be able to use the control fully in TypeScript code. Luckily, it's enough to do this once (for each control) and it's super-easy. In the command output of the generator, you see the following block:
 ```
 NOTE:
-Class MyControl in file C:/temp/cctest/ui5-typescript-helloworld/src/control/MyControl.ts needs to contain the following constructors, in order to make TypeScript aware of the possible constructor settings. Please copy&paste the block manually, as the ts-interface-generator will not touch your source files:
+Class MyControl in file ui5-typescript-helloworld/src/control/MyControl.ts needs to contain
+the following constructors, in order to make TypeScript aware of the possible constructor settings.
+Please copy&paste the block manually, as the ts-interface-generator will not touch your source files:
 ===== BEGIN =====
 // The following three lines were generated and should remain as-is to make TypeScript aware of the constructor signatures 
 constructor(id?: string | $MyControlSettings);
@@ -250,25 +246,10 @@ constructor(id?: string, settings?: $MyControlSettings) { super(id, settings); }
 ===== END =====
 ``` 
 
-So please copy the block between `===== BEGIN =====` and `===== END =====` into your original class implementation inside `MyControl.ts`. A good location would be right at the beginning, before the metadata defeinition.
-
-#### 2. Connect the Generated Interface to the Control
-
-To make Module Augmentation work, the control must also be exported by its name (not only as default export), so you need to add the first of the following two lines to MyControl.js:
-
-```js
-export { MyControl }; // needed for merging the generated interface
-export default MyControl;
-```
-
-(This causes `MyControl.MyControl` to exist at runtime, which is not intended. There is a [proposal](https://github.com/r-murphy/babel-plugin-transform-modules-ui5/pull/67) how to get rid of this in the UI5 transformer plugin.)
-
-The error in `MyControl.ts` is gone now.
+Please copy the block between `===== BEGIN =====` and `===== END =====` into your original class implementation inside `MyControl.ts`. A good location would be right at the beginning of the class body, before the metadata definition.
 
 Congratulations! That's it!
 You can now extend the control or develop more of them.
-
-
 
 
 ## Debug the App

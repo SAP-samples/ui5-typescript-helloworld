@@ -9,7 +9,7 @@ declare module "./MyControl" {
         text?: string;
     }
 
-    interface MyControl {
+    export default interface MyControl {
 
         // property: text
         getText(): string;
