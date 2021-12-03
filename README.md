@@ -65,7 +65,7 @@ import RenderManager from "sap/ui/core/RenderManager";
 /**
  * @namespace ui5.typescript.helloworld.control
  */
-class MyControl extends Control {
+export default class MyControl extends Control {
  
     static readonly metadata = {
         properties: {
@@ -84,8 +84,6 @@ class MyControl extends Control {
 		alert("Hello World!");
 	}
 }
- 
-export default MyControl;
 ```
 
 The control metadata is written as static class member, just like the renderer.<br>
@@ -103,8 +101,10 @@ Or you could use decorators:
 
 ```js
 @namespace('ui5.typescript.helloworld.control')
-class MyControl extends Control {
+export default class MyControl extends Control {
 ```
+
+Make sure to export the control class as default export and to do it immediately when the class is defined, otherwise you will run into trouble later on when the TSinterface generator is introduced to the project.
 
 ### Using the Custom Control
 
