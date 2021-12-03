@@ -17,11 +17,14 @@ class MyControl extends Control {
         }
     };
 
-    static renderer = function(oRm: RenderManager, oControl: MyControl): void {
-        oRm.openStart("div", oControl);
-        oRm.openEnd();
-        oRm.text(oControl.getText());
-        oRm.close("div");
+    static renderer = {
+        apiVersion: 2,
+        render: function(oRm: RenderManager, oControl: MyControl): void {
+            oRm.openStart("div", oControl);
+            oRm.openEnd();
+            oRm.text(oControl.getText());
+            oRm.close("div");
+        }
     };
 
 	onclick = function(): void {
