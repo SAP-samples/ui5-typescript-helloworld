@@ -17,3 +17,6 @@ node_modules/
 # do not add dependency lock files to this sample repo because it should remain independent from specific dependency managers
 package-lock.json
 yarn.lock
+
+.vscode/settings.json
+.vscode/diff
