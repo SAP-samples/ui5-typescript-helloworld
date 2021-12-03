@@ -4,7 +4,7 @@ import RenderManager from "sap/ui/core/RenderManager";
 /**
  * @namespace ui5.typescript.helloworld.control
  */
-class MyControl extends Control {
+ export default class MyControl extends Control {
  
     // The following three lines were generated and should remain as-is to make TypeScript aware of the constructor signatures
     constructor(idOrSettings?: string | $MyControlSettings);
@@ -31,6 +31,3 @@ class MyControl extends Control {
 		alert("Hello World!");
 	}
 }
-
-export { MyControl }; // needed for merging the generated interface
-export default MyControl;
