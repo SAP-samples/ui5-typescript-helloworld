@@ -104,7 +104,6 @@ So we need to add a `tsconfig.json` configuration file to configure the right la
         "module": "es2015",
         "skipLibCheck": true,
         "preserveConstEnums": true,
-        "sourceMap": false,
         "allowJs": true,
         "strict": true,
         "strictNullChecks": false,
@@ -136,6 +135,8 @@ Note: when you use the `@sapui5/ts-types-esm` (or `@openui5/ts-types-esm`) types
 Why? TypeScript automatically finds all type definition files in a dependency starting with "@types/..." (i.e. all *.d.ts files in `node_modules/@types/...`). The jQuery d.ts files are there and found, but the SAPUI5 types are only in a package starting with "@sapui5/", hence they must be loaded by explicitly mentioning them in the "typeRoots" section. As this disables the automatic loading of other types from `node_modules/@types/...`, this path must also be given as a type root. 
 
 There are additional settings in this file, e.g. telling the compiler which files to compile (all matching "./src/**/*") and where to put the compiled results (to "./dist"). And a couple of compiler options which are not so important right now. They determine how exactly the compiler behaves. The "paths" section informs TypeScript about the mapping of namespaces used in the app.
+
+Note that some of the settings (like the `outDir`) are not used as configured here, but overridden when calling the transpiler.
 
 Now you can do the following <b>in the root directory</b> of your project. TypeScript will pick up all the settings and as result you will find a compiled JavaScript file in the automatically created "dist" folder:
 
@@ -313,12 +314,12 @@ While only the first four lines are strictly required to use the UI5 tools, the 
 What you can do now: compile the full app into the "webapp" folder and run it from there using the UI5 tools:
 
 ```sh
-npx babel src --out-dir webapp --source-maps inline --extensions \".ts,.js\" --copy-files
+npx babel src --out-dir webapp --source-maps true --extensions \".ts,.js\" --copy-files
 npx ui5 serve -o index.html
 ```
 
 Note: there are now two more parameters used in the Babel call than before:
-1. `--source-maps inline` adds the original TypeScript source code into the generated JavaScript files as a sort of appendix comment. Browsers understand this, so they can enable stepping through the original TypeScript code in the debugger even though they actually run the compiled JavaScript code under the hood.
+1. `--source-maps true` adds the original TypeScript source code into `*.js.map` files next to the transpiled JavaScript files, plus a pointer to those `.map` files to the end of the JS files. Browsers understand this, so they can enable stepping through the original TypeScript code in the debugger even though they actually run the compiled JavaScript code under the hood. Note that this describes the transpiled output in the `webapp` directory; the optimizing UI5 build into the `dist` directory removes these sourcemaps. 
 1. `--copy-files` ensures that also non-TypeScript files are copied over from "src" to "webapp", like e.g. the view XML files.
 
 That's it! A web server with the app is started and the app is automatically opened inside your browser!
@@ -369,7 +370,7 @@ Make sure to get the indentation right (first line is not indented) because it i
 As result, you can now execute these two commands in different terminal windows:
 
 ```sh
-npx babel src --out-dir webapp --source-maps inline --extensions \".ts,.js\" --copy-files --watch
+npx babel src --out-dir webapp --source-maps true --extensions \".ts,.js\" --copy-files --watch
 ```
 
 ```sh
@@ -439,11 +440,11 @@ Change the `"scripts"` section in the `package.json` file to have the following 
 {
     "build": "npm-run-all build:ts build:ui5",
     "build:opt": "npm-run-all build:ts build:ui5:opt",
-    "build:ts": "babel src --out-dir webapp --source-maps inline --extensions \".ts,.js\" --copy-files",
+    "build:ts": "babel src --out-dir webapp --source-maps true --extensions \".ts,.js\" --copy-files",
     "build:ui5": "ui5 build --clean-dest",
     "build:ui5:opt": "ui5 build self-contained --clean-dest --all",
     "start": "npm-run-all --parallel watch:ts start:ui5",
-    "watch:ts": "babel src --out-dir webapp --source-maps inline --extensions \".ts,.js\" --copy-files --watch",
+    "watch:ts": "babel src --out-dir webapp --source-maps true --extensions \".ts,.js\" --copy-files --watch",
     "start:ui5": "ui5 serve --port 8080 -o index.html",
     "start:dist": "ui5 serve  --port 8080 -o index.html --config ui5-dist.yaml",
     "ts-typecheck": "tsc --noEmit",
