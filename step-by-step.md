@@ -70,7 +70,7 @@ Note that the scope of this tutorial is the TypeScript setup of a project, not t
 
 Now, let's get the TypeScript compiler and the UI5 and jQuery type definitions:
 ```sh
-npm install --save-dev typescript @types/openui5@1.91.0 @types/jquery@3.5.1 @types/qunit@2.5.4
+npm install --save-dev typescript @types/openui5@1.97.0 @types/jquery@3.5.1 @types/qunit@2.5.4
 ```
 
 When you are developing a SAPUI5 application (i.e. also using control librariess which are not available in OpenUI5), use the `@sapui5/ts-types-esm` types instead of the `@types/openui5` ones.
@@ -301,7 +301,7 @@ metadata:
 type: application
 framework:
   name: OpenUI5
-  version: "1.91.0"
+  version: "1.97.0"
   libraries:
     - name: sap.m
     - name: sap.ui.core
@@ -413,7 +413,7 @@ resources:
       webapp: dist
 framework:
   name: OpenUI5
-  version: "1.91.0"
+  version: "1.97.0"
   libraries:
     - name: sap.m
     - name: sap.ui.core
