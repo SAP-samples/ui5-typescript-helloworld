@@ -67,18 +67,18 @@ import RenderManager from "sap/ui/core/RenderManager";
  */
 export default class MyControl extends Control {
  
-    static readonly metadata = {
-        properties: {
-            "text": "string"
-        }
-    };
+	static readonly metadata = {
+		properties: {
+			"text": "string"
+		}
+	};
 
-    static renderer = function(oRm: RenderManager, oControl: MyControl) {
-        oRm.openStart("div", oControl);
-        oRm.openEnd();
-        oRm.text(oControl.getText());
-        oRm.close("div");
-    };
+	static renderer = function(rm: RenderManager, control: MyControl) {
+		rm.openStart("div", control);
+		rm.openEnd();
+		rm.text(control.getText());
+		rm.close("div");
+	};
 
 	onclick = function() {
 		alert("Hello World!");
@@ -150,11 +150,11 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
         alert("Hello World!");
       };
     },
-    renderer: function (oRm, oControl) {
-      oRm.openStart("div", oControl);
-      oRm.openEnd();
-      oRm.text(oControl.getText());
-      oRm.close("div");
+    renderer: function (rm, control) {
+      rm.openStart("div", control);
+      rm.openEnd();
+      rm.text(control.getText());
+      rm.close("div");
     },
     metadata: {
       properties: {
@@ -180,7 +180,7 @@ you can run the app and see the custom control in action.
 But there is a problem that looks small, but is huge: in the renderer method of `MyControl.ts`, there is a TypeScript error, where the `getText()` method of the control is called:
 
 ```ts
-oRm.text(oControl.getText())
+rm.text(control.getText())
 ```
 
 The error says:
