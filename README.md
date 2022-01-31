@@ -224,7 +224,7 @@ To easily start this when needed, you can add the following line to the "scripts
 "watch:controls": "npx @ui5/ts-interface-generator --watch",
 ```
 
-This generates a `MyControl.generated.tsinterface.ts` with the missing method definitions and constructor settings object type and re-generates it whenever any of the TypeScript files changes.
+This generates a `MyControl.gen.d.ts` with the missing method definitions and constructor settings object type and re-generates it whenever any of the TypeScript files changes.
 
 It is recommended to either keep this generator running in watch mode whenever you are doing changes to any control metadata or to run it once whenever such changes are completed.
 
