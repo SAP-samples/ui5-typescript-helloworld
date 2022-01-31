@@ -7,7 +7,7 @@
         "inlineSourceMap": true,
         "allowJs": true,
         "strict": true,
-        "strictNullChecks": false,
+        "strictNullChecks": true,
         "strictPropertyInitialization": false,
         "rootDir": "./src",
         "outDir": "./dist",
