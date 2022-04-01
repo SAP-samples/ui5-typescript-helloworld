@@ -68,20 +68,26 @@ Note that the scope of this tutorial is the TypeScript setup of a project, not t
 
 ## 3. Set Up the TypeScript Compilation
 
-Now, let's get the TypeScript compiler and the UI5 and jQuery type definitions:
+Now, let's get the TypeScript compiler and the UI5 type definitions:
 ```sh
-npm install --save-dev typescript @types/openui5@1.98.0 @types/jquery@3.5.9 @types/qunit@2.5.4
+npm install --save-dev typescript @types/openui5@1.100.0
 ```
 
-When you are developing a SAPUI5 application (i.e. also using control librariess which are not available in OpenUI5), use the `@sapui5/ts-types-esm` types instead of the `@types/openui5` ones.
+When you are developing a SAPUI5 application (i.e. also using control libraries which are not available in OpenUI5), use the `@sapui5/ts-types-esm` types instead of the `@types/openui5` ones.
 
-There are also `@openui5/ts-types-esm` types available, how do they differ from the `@types/openui5` ones? The only difference is in versioning: while the types in the `@openui5` namespace are exactly in sync with the respective OpenUI5 release, the ones in the `@types` namespace follow the DefinitelyTyped versioning and are only released once per minor release of OpenUI5 (more details [here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#versioning)). In practice it shouldn't make a difference what you use, but note that in the `@types` namespace there is usually only the *.*.0 patch release available.
-<br>
+There are also `@openui5/ts-types-esm` types available  how do they differ from the `@types/openui5` ones?
+<br>The one difference is in versioning: while the types in the `@openui5` namespace are exactly in sync with the respective OpenUI5 release, the ones in the `@types` namespace follow the DefinitelyTyped versioning and are only released once per minor release of OpenUI5 ([more details here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#versioning)). In practice it shouldn't make any difference what you use, but note that in the `@types` namespace there is usually only the *.*.0 patch release available.<br>
+The other small difference is [described in detail here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#jquery-and-qunit-references-and-their-versions). In essence, UI5 declares the jQuery and QUnit types as dependencies to make sure the type definitions are also loaded because types from those libraries are in some places exposed in UI5 APIs. The difference is that for `@types/openui5` the *latest* version of those types is referenced and for `@openui5/ts-types-esm` the *best matching* version is referenced. But in practice also this difference should not be something to worry about. To enforce using a specific version of the jQuery/QUnit types, you can always do e.g.:
+```sh
+npm install --save-dev @types/jquery@3.5.9 @types/qunit@2.5.4
+```
+
+> **NOTE:** When using either `ts-types-esm` package of a UI5 version before 1.100, you need to add the jQuery and QUnit type definitions manually like this to have them available.
+
 The SAPUI5 types are not available in the `@types` namespace.
 
 
-We are installing concrete versions here to make sure the type definitions match the used UI5 code and the jQuery version coming with it.<br>
-Types for other libraries would need to be added the same way.
+
 
 Now execute 
 
@@ -301,7 +307,7 @@ metadata:
 type: application
 framework:
   name: OpenUI5
-  version: "1.98.0"
+  version: "1.100.0"
   libraries:
     - name: sap.m
     - name: sap.ui.core
@@ -413,7 +419,7 @@ resources:
       webapp: dist
 framework:
   name: OpenUI5
-  version: "1.98.0"
+  version: "1.100.0"
   libraries:
     - name: sap.m
     - name: sap.ui.core
