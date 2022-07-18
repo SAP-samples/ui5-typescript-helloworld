@@ -70,21 +70,21 @@ Note that the scope of this tutorial is the TypeScript setup of a project, not t
 
 Now, let's get the TypeScript compiler and the UI5 type definitions:
 ```sh
-npm install --save-dev typescript @types/openui5@1.100.0
+npm install --save-dev typescript @types/openui5@1.104.0
 ```
 
 When you are developing a SAPUI5 application (i.e. also using control libraries which are not available in OpenUI5), use the `@sapui5/ts-types-esm` types instead of the `@types/openui5` ones.
 
-There are also `@openui5/ts-types-esm` types available  how do they differ from the `@types/openui5` ones?
-<br>The one difference is in versioning: while the types in the `@openui5` namespace are exactly in sync with the respective OpenUI5 release, the ones in the `@types` namespace follow the DefinitelyTyped versioning and are only released once per minor release of OpenUI5 ([more details here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#versioning)). In practice it shouldn't make any difference what you use, but note that in the `@types` namespace there is usually only the *.*.0 patch release available.<br>
+> **Remark:** There are also `@openui5/ts-types-esm` types available - how do they differ from the `@types/openui5` ones?
+<br>The one difference is in versioning: while the types in the `@openui5` namespace are exactly in sync with the respective OpenUI5 patch release, the ones in the `@types` namespace follow the DefinitelyTyped versioning and are only released *once* per minor release of OpenUI5 ([more details here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#versioning)), not for every patch. In practice it shouldn't make any difference what you use, but note that in the `@types` namespace there is usually only the `*.*.0` patch release available.<br>
 The other small difference is [described in detail here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#jquery-and-qunit-references-and-their-versions). In essence, UI5 declares the jQuery and QUnit types as dependencies to make sure the type definitions are also loaded because types from those libraries are in some places exposed in UI5 APIs. The difference is that for `@types/openui5` the *latest* version of those types is referenced and for `@openui5/ts-types-esm` the *best matching* version is referenced. But in practice also this difference should not be something to worry about. To enforce using a specific version of the jQuery/QUnit types, you can always do e.g.:
-```sh
-npm install --save-dev @types/jquery@3.5.9 @types/qunit@2.5.4
-```
-
-> **NOTE:** When using either `ts-types-esm` package of a UI5 version before 1.100, you need to add the jQuery and QUnit type definitions manually like this to have them available.
-
-The SAPUI5 types are not available in the `@types` namespace.
+> ```sh
+> npm install --save-dev @types/jquery@3.5.9 @types/qunit@2.5.4
+> ```
+>
+> When using either `ts-types-esm` package of a UI5 version before 1.100, you *must* add the jQuery and QUnit type definitions manually like shown above to have them available.
+>
+> The SAPUI5 types are not available in the `@types` namespace.
 
 
 
@@ -108,6 +108,7 @@ So we need to add a `tsconfig.json` configuration file to configure the right la
     "compilerOptions": {
         "target": "es2015",
         "module": "es2015",
+        "moduleResolution": "node",
         "skipLibCheck": true,
         "preserveConstEnums": true,
         "allowJs": true,
@@ -129,16 +130,18 @@ So we need to add a `tsconfig.json` configuration file to configure the right la
 }
 ```
 
-Note: when you use the `@sapui5/ts-types-esm` (or `@openui5/ts-types-esm`) types instead, you need to add the following section to tsconfig.json:
-
-```json
-        "typeRoots": [
-            "./node_modules/@types",
-            "./node_modules/@sapui5/ts-types-esm"
-        ],
-```
-
-Why? TypeScript automatically finds all type definition files in a dependency starting with "@types/..." (i.e. all *.d.ts files in `node_modules/@types/...`). The jQuery d.ts files are there and found, but the SAPUI5 types are only in a package starting with "@sapui5/", hence they must be loaded by explicitly mentioning them in the "typeRoots" section. As this disables the automatic loading of other types from `node_modules/@types/...`, this path must also be given as a type root. 
+> **Note:** when you use the `@sapui5/ts-types-esm` (or `@openui5/ts-types-esm`) types instead, you need to add the following section to tsconfig.json:
+>
+> ```json
+>        "typeRoots": [
+>            "./node_modules/@types"
+>        ],
+>        "types": [
+>            "@sapui5/ts-types-esm"
+>        ],
+>```
+>
+> Why? TypeScript automatically finds all type definition files in a dependency starting with "@types/..." (i.e. all *.d.ts files in `node_modules/@types/...`). The jQuery d.ts files are there and found, but the SAPUI5 types are only available in a package starting with "@sapui5/", hence TypeScript must be explicitly pointed to these types. As this disables the automatic loading of other types from `node_modules/@types/...`, this path must be given as a type root. 
 
 There are additional settings in this file, e.g. telling the compiler which files to compile (all matching "./src/**/*") and where to put the compiled results (to "./dist"). And a couple of compiler options which are not so important right now. They determine how exactly the compiler behaves. The "paths" section informs TypeScript about the mapping of namespaces used in the app.
 
@@ -307,7 +310,7 @@ metadata:
 type: application
 framework:
   name: OpenUI5
-  version: "1.100.0"
+  version: "1.104.0"
   libraries:
     - name: sap.m
     - name: sap.ui.core
@@ -419,7 +422,7 @@ resources:
       webapp: dist
 framework:
   name: OpenUI5
-  version: "1.100.0"
+  version: "1.104.0"
   libraries:
     - name: sap.m
     - name: sap.ui.core
