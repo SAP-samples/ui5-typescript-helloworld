@@ -11,7 +11,7 @@ export default class MyControl extends Control {
 	constructor(id?: string, settings?: $MyControlSettings);
 	constructor(id?: string, settings?: $MyControlSettings) { super(id, settings); }
 
-	static readonly metadata = {
+	static readonly metadata: object = {
 		properties: {
 			"text": "string"
 		}

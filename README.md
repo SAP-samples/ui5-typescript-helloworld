@@ -67,7 +67,7 @@ import RenderManager from "sap/ui/core/RenderManager";
  */
 export default class MyControl extends Control {
  
-	static readonly metadata = {
+	static readonly metadata: object = {
 		properties: {
 			"text": "string"
 		}
@@ -86,7 +86,9 @@ export default class MyControl extends Control {
 }
 ```
 
-The control metadata is written as static class member, just like the renderer.<br>
+The control metadata is written as static class member, just like the renderer. It should be typed as `object` for the time being. Not typing it will lead to issues when inheriting from this control, as the TypeScript compiler will expect the same properties to be present in any derived control's metadata. But properties are inherited, so they should not be repeated.<br>
+As soon as the UI5 types come with a type for the metadata object, that type should be used instead, for best type-safety and code completion.
+
 The JSDoc comment and the `@namespace` annotation inside is required to make the [transformer plugin](https://github.com/r-murphy/babel-plugin-transform-modules-ui5) aware that the class should be transformed to classic UI5 syntax and what the full UI5 name of the class should be in the `BaseClass.extend(...)` call.
 
 Actually, there are [multiple ways supported to supply the name](https://github.com/r-murphy/babel-plugin-transform-modules-ui5#configuring-name-or-namespace). You could e.g. also set the `@name` annotation:
