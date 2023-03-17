@@ -6,7 +6,9 @@
         ["@babel/preset-env", {
             "targets": "defaults"
         }],
-        "transform-ui5",
+        ["transform-ui5", {
+            "noWrapBeforeImport": true
+        }],
         "@babel/preset-typescript"
     ],
     "sourceMaps": true

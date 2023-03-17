@@ -1,33 +1,79 @@
-# A Small TypeScript UI5 Example App
+# A Small TypeScript UI5 Example App with Tests
 
-[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/ui5-typescript-helloworld)](https://api.reuse.software/info/github.com/SAP-samples/ui5-typescript-helloworld)
+This app demonstrates a TypeScript setup for developing UI5 applications. For general documentation, please see the [`main` branch](https://github.com/SAP-samples/ui5-typescript-helloworld/tree/main) of this repository.
 
-## Description
+**This `testing` branch explores how tests are best written in TypeScript.**
 
-This app demonstrates a TypeScript setup for developing UI5 applications.
+:construction: **WORK IN PROGRESS** :construction:
 
-As the focus is on the TypeScript setup, the app code itself is quite minimal, it is not using models, translation files etc.
+* [Unit tests (QUnit)](./src/test/unit/) look good: run `npm start` and open http://localhost:8080/test/unit/unitTests.qunit.html 
+* OPA tests still need additional boilerplate code and do NOT represent the final state! OPA APIs do not fit a typed language very well. Type definitions as well as APIs are being improved. Nevertheless, the OPA test code in this repository does work and is streamlined to some degree. The integration tests can be run at http://localhost:8080/test/integration/opaTests.qunit.html.
 
-**This repository also contains [a detailed step-by-step guide](step-by-step.md), which explains how this setup is created and how all the bits and pieces fit together.**
+## Testing
 
-**In the [custom-controls](https://github.com/SAP-samples/ui5-typescript-helloworld/tree/custom-controls) branch, this repository also contains instructions and an example how custom controls can be developed in TypeScript within applications.**
+### General Setup
 
-**The [TypeScript branch of the "UI5 CAP Event App"](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript) sample demonstrates a slightly more complex application, using the same setup. It comes with an [explanation](https://github.com/SAP-samples/ui5-cap-event-app/blob/typescript/docs/typescript.md) of what UI5 TypeScript code usually looks like and what to consider.**
+Right now no test runner is present, only the tests themselves which can be run manually.
 
-**The UI5con 2021 session on TypeScript ([recording available at YouTube](https://www.youtube.com/watch?v=aXzcsOZH4q8)) explains the overall approach for TypeScript and UI5.**
+The testsuite.qunit.html/.ts files in `src/test` are not meant to be used like this, yet. They bundle the OPA and QUnit tests into one runner page.
 
-**There is also an [application template](https://github.com/ui5-community/generator-ui5-ts-app) (based on yeoman and easy-ui5) which has been shown in the [UI5con Keynote](https://www.youtube.com/watch?v=aXzcsOZH4q8) and explained in [this blog](https://blogs.sap.com/2021/07/01/getting-started-with-typescript-for-ui5-application-development/).**
+### Unit Tests (QUnit)
 
-| :point_up: Overview of TypeScript-related Entities |
-|:---------------------------|
-| The UI5 type definitions (`*.d.ts` files) are loaded as dev dependency from [npm](https://www.npmjs.com/package/@openui5/ts-types-esm). They are a work in progress, so while they should be working well already, we are still improving them, which might also lead to breaking changes.<br/>
- The file [tsconfig.json](tsconfig.json) contains the configuration for the TypeScript compilation, including a reference to the UI5 `*.d.ts` files.<br/>
- Normally, the UI5 JavaScript files (controllers, Component.js etc.) would reside in the `webapp` folder. Now they are in the [src](src) folder. The TypeScript compilation will create the `webapp` folder and put all output there. <br/>
- In addition to the TypeScript compilation, there is also a conversion from the ES6 module and class syntax used in the source files to the classic UI5 module loading and class definition syntax (`sap.ui.define(...)` and `superClass.extend(...)`). This conversion is using the [babel-plugin-transform-modules-ui5](https://github.com/r-murphy/babel-plugin-transform-modules-ui5) project from Ryan Murphy. <br/> 
- Both, the TypeScript compilation and the ES6 syntax transformation, are executed by Babel, as configured in the file [.babelrc.json](.babelrc.json)<br/> 
- This combined transformation is triggered by both the `build:ts` and `watch:ts` scripts in [package.json](package.json). |
+> Note: `QUnit` is globally defined and its types are automatically required by the UI5 types. So there is no setup needed to use it. However, in order to allow cleaner code that does not access any globals, starting with UI5 1.112, QUnit can be explicitly imported like this: `import QUnit from "sap/ui/thirdparty/qunit-2";`
 
+#### The entry point in `unitTests.qunit.html`
 
+[`src/test/unit/unitTests.qunit.html`](src/test/unit/unitTests.qunit.html) is the entry point for running the tests, it loads QUnit etc. and finally, once UI5 is launched, it loads the list of tests configured in `src/test/unit/unitTests.qunit.ts`.
+
+#### The list of tests in `src/test/unit/unitTests.qunit.ts` 
+
+[`src/test/unit/unitTests.qunit.ts`](src/test/unit/unitTests.qunit.ts) imports all test files, which can be done in a very clean way thanks to the ES6 module imports.
+
+`QUnit.config.autostart = false` must be set before QUnit thinks it can start, then the tests are imported, then `QUnit.start()` is called. There are various ways to achieve this:
+
+* `QUnit.config.autostart = false` could be set in a separate script loaded/executed beforehand
+* The tests could be imported as dynamic imports like `import("unit/controller/App.qunit")` with Promise.all(...) waiting for them and then triggering `QUnit.start`, but this will only work when the tests actually export something
+* `QUnit.config.autostart = false`, the imports and `QUnit.start()` can simply be written one after each other, but only when the `noWrapBeforeImport` transformer setting is active
+
+All three options are mentioned in `src/test/unit/unitTests.qunit.ts` with the third being active.
+
+#### The concrete tests in `src/test/unit/controller/App.qunit.ts`
+
+In the (very minimal) actual tests in [`src/test/unit/controller/App.qunit.ts`](src/test/unit/controller/App.qunit.ts) there is nothing surprising from TypeScript perspective. There isn't any TypeScript-specific syntax required, but of course ES6-style imports are used just like in the application code.
+
+### Integration Tests (OPA)
+
+**IMPORTANT:**
+*The OPA tests in TypeScript are experimental work in progress! This means they **do** work as shown in this sample project, **but** the UI5 team is working on making the OPA APIs work better with TypeScript. Therefore, it is expected that the recommended way of writing OPA tests in TypeScript will change and be simplified over time!*
+
+#### The entry point and the list of tests
+
+Just like for the unit tests, [`src/test/integration/opaTests.qunit.html`](src/test/integration/opaTests.qunit.html) is the entry point for running the OPA tests, which loads the list of journeys configured in [`src/test/integration/opaTests.qunit.ts`](src/test/integration/opaTests.qunit.ts).
+
+#### The "Hello" Journey
+
+The test journey [`src/test/integration/HelloJourney.ts`](src/test/integration/HelloJourney.ts) is actually pretty straightforward.
+
+The only thing specific to OPA with TypeScript is that the `Given`/`When`/`Then` types in the `opaTest(...)` callbacks need to be typed. All three are typed as `Opa5`, but in case of `When` and `Then` additionally enriched with the Actions/Assertions defined in the page defiitions (see below).
+
+#### The "App" page
+
+This is where bigger changes are done compared to non-TypeScript OPA tests:
+
+1. The actions and assertions are written as *classes* extending Opa5.
+2. These classes have a self-typed `and` property, which is needed for the call chaining.
+3. Each `waitFor(...)` result type is cast to `AppPageActions & jQuery.Promise` or `AppPageAssertions & jQuery.Promise`, respectively (otherwise `.and` does not exist on them).
+4. In the last line a custom version of `Opa5.createPageObjects()` is called:
+  \
+  `OPA_Extension.createPageObjects_NEW_OVERLOAD("onTheAppPage", AppPageActions, AppPageAssertions);`
+  \
+  The implementation of this method resides in [`src/test/integration/OPA_extension.ts`](src/test/integration/OPA_extension.ts) and is expected to move into the OPA framework in some way or another.
+
+Apart from these changes, the implementation of the actions and assertions is done just like in plain JavaScript.
+
+#### Additional files `OPA_extension.ts` and `AllPages.ts`
+
+On top of the already mentioned [`src/test/integration/OPA_extension.ts`](src/test/integration/OPA_extension.ts) file, there is also [`src/test/integration/pages/AllPages.ts`](src/test/integration/pages/AllPages.ts), a file defining the `When`/`Then` types which hold actions/assertions from *all* pages and are hence separated out. `When` and `Then` are manually defined here in order to add the property `onTheAppPage` (as well as any further pages) along with the respective actions/assertions.
 
 ## Requirements
 
@@ -35,22 +81,24 @@ Either [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/), or [pnpm](ht
 
 ## Download and Installation
 
-1. Clone the project:
+1. Clone the project and switch to the `testing` branch:
 
-```sh
-git clone https://github.com/SAP-samples/ui5-typescript-helloworld.git
-cd ui5-typescript-helloworld
-```
+   ```sh
+   git clone https://github.com/SAP-samples/ui5-typescript-helloworld.git
+   cd ui5-typescript-helloworld
+   git checkout testing
+   ```
 
-(or download from https://github.com/SAP-samples/ui5-typescript-helloworld/archive/main.zip)
+   (or download from https://github.com/SAP-samples/ui5-typescript-helloworld/archive/refs/heads/testing.zip)
+   &nbsp;
 
-2. Use npm (or any other package manager) to install the dependencies:
+1. Install the dependencies:
 
-```sh
-npm install
-```
+   ```sh
+   npm install
+   ```
 
-## Run the App
+## Run the App and the Tests
 
 Execute the following command to run the app locally for development in watch mode (the browser reloads the app automatically when there are changes in the source code):
 
@@ -60,81 +108,21 @@ npm start
 
 As shown in the terminal after executing this command, the app is then running on http://localhost:8080/index.html. A browser window with this URL should automatically open.
 
-## Debug the App
-
-In the browser, you can directly debug the original TypeScript code, which is supplied via sourcemaps (need to be enabled in the browser's developer console if it does not work straight away). If the browser doesn't automatically jump to the TypeScript code when setting breakpoints, use e.g. `Ctrl`/`Cmd` + `P` in Chrome to open the `*.ts` file you want to debug.
-
-## Build the App
-
-### Unoptimized (but quick)
-
-Execute the following command to build the project and get an app that can be deployed:
-
-```sh
-npm run build
-```
-
-The result is placed into the `dist` folder. To start the generated package, just run
-
-```sh
-npm run start:dist
-```
-
-Note that `index.html` still loads the UI5 framework from the relative URL `resources/...`, which does not physically exist, but is only provided dynamically by the UI5 tooling. So for an actual deployment you should change this URL to either [the CDN](https://sdk.openui5.org/#/topic/2d3eb2f322ea4a82983c1c62a33ec4ae) or your local deployment of UI5.
-
-### Optimized
-
-For an optimized self-contained build (takes longer because the UI5 resources are built, too), do:
-
-```sh
-npm run build:opt
-```
-
-To start the generated package, again just run
-
-```sh
-npm run start:dist
-```
-
-In this case, all UI5 framework resources are also available within the `dist` folder, so the folder can be deployed as-is to any static web server, without changing the bootstrap URL.<br>
-With the self-contained build, the bootstrap URL in `index.html` has already been modified to load the newly created `sap-ui-custom.js` for bootstrapping, which contains all app resources as well as all needed UI5 JavaScript resources. Most UI5 resources inside the `dist` folder are for this reason actually **not** needed to run the app. Only the non-JS-files, like translation texts and CSS files, are used and must also be deployed. (Only when for some reason JS files are missing from the optimized self-contained bundle, they are also loaded separately.)
-
-## Check the Code
-
-Do the following to run a TypeScript check:
-
-```sh
-npm run ts-typecheck
-```
-
-This checks the application code for any type errors (but will also complain in case of fundamental syntax issues which break the parsing).<br>
-
-To lint the TypeScript code, do:
-
-```sh
-npm run lint
-```
+Open http://localhost:8080/test/unit/unitTests.qunit.html to run the QUnit tests.
 
 ## Limitations
 
-- At this time, the used eslint rules are not verified to be optimal or to be in sync with UI5 recommendations.
+The ways how tests are written in TypeScript are still being improved. When you base any work on this code, be prepared to adapt later.
 
 ## Known Issues
 
-None.
+http://localhost:8080/test/testsuite.qunit.html does not find any tests
 
 ## How to Obtain Support
 
 The sample code is provided **as-is**. No support is provided.
 
 [Create an issue](https://github.com/SAP-samples/ui5-typescript-helloworld/issues) in this repository if you find a bug.
-Questions can be [asked in SAP Community](https://answers.sap.com/questions/ask.html).
-
-<!-- ## Contributing -->
-
-## References
-
-Once you have understood the setup and want to inspect the code of a slightly more comprehensive UI5 app written in TypeScript, you can check out the [TypeScript version of the UI5 CAP Event App Sample](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript).
 
 ## License
 

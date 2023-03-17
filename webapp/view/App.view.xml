@@ -13,6 +13,7 @@
 			description="">
 			<buttons>
 				<Button
+					id="helloButton"
 					text="Say Hello"
 					press="sayHello" />
 			</buttons>
