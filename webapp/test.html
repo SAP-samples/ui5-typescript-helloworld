@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>UI5 made easy!</title>
+	<script id="sap-ui-bootstrap"
+	        src="resources/sap-ui-core.js"
+	        data-sap-ui-libs="sap.m"
+	        data-sap-ui-theme="sap_horizon"
+	        data-sap-ui-compatVersion="edge"
+	        data-sap-ui-oninit="onInit"
+	        data-sap-ui-async="true"
+	></script>
+	<script>
+		function onInit() {
+			sap.ui.require(["sap/m/Button"], function(Button) {
+				new Button({
+					text: "Hello World",
+					press: function() {
+						alert(this.getText());
+					}
+				}).placeAt(content);
+			});
+		}
+	</script>
+</head>
+<body class="sapUiBody">
+	<div id="content"></div>
+</body>
+</html>
