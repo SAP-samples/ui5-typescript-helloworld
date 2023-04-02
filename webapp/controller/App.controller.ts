@@ -1,4 +1,3 @@
-import MessageBox from "sap/m/MessageBox";
 import Controller from "sap/ui/core/mvc/Controller";
 import AppComponent from "../Component";
 
@@ -15,7 +14,8 @@ export default class App extends Controller {
 		}
 	}
 
-	public sayHello() : void {
-		MessageBox.show("Hello World!");
+	public async sayHello() : Promise<void> {
+		const MessageBox = (await import("sap/m/MessageBox")).default;
+		MessageBox.show("Hello Ecosystem!");
 	}
 }

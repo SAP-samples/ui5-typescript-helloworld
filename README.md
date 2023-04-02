@@ -6,16 +6,18 @@ This app demonstrates a TypeScript setup for developing UI5 applications. For ge
 
 :construction: **WORK IN PROGRESS** :construction:
 
-* [Unit tests (QUnit)](./src/test/unit/) look good: run `npm start` and open http://localhost:8080/test/unit/unitTests.qunit.html 
+* [Unit tests (QUnit)](./webapp/test/unit/) look good: run `npm start` and open http://localhost:8080/test/unit/unitTests.qunit.html 
 * OPA tests still need additional boilerplate code and do NOT represent the final state! OPA APIs do not fit a typed language very well. Type definitions as well as APIs are being improved. Nevertheless, the OPA test code in this repository does work and is streamlined to some degree. The integration tests can be run at http://localhost:8080/test/integration/opaTests.qunit.html.
 
 ## Testing
 
 ### General Setup
 
-Right now no test runner is present, only the tests themselves which can be run manually.
+The tests can be executed either manually or in an automated way using Karma. The setup provides the following options:
 
-The testsuite.qunit.html/.ts files in `src/test` are not meant to be used like this, yet. They bundle the OPA and QUnit tests into one runner page.
+1. *Manual execution*  using `npm start` and execute the tests by opening the [testsuite](http://localhost:8080/test/testsuite.qunit.html) in your browser (but you can also open the QUnit or Integration testsuite directly)
+2. *Test-driven* development by running Karma in watch mode using `npm run karma` (which triggers the test each time a source file changes)
+3. *Headless testing* by running Karma either without coverage reporting using `npm run karma-ci` or with using `npm run karma-ci-cov`
 
 ### Unit Tests (QUnit)
 
@@ -23,23 +25,17 @@ The testsuite.qunit.html/.ts files in `src/test` are not meant to be used like t
 
 #### The entry point in `unitTests.qunit.html`
 
-[`src/test/unit/unitTests.qunit.html`](src/test/unit/unitTests.qunit.html) is the entry point for running the tests, it loads QUnit etc. and finally, once UI5 is launched, it loads the list of tests configured in `src/test/unit/unitTests.qunit.ts`.
+[`webapp/test/unit/unitTests.qunit.html`](webapp/test/unit/unitTests.qunit.html) is the entry point for running the tests, it loads QUnit etc. and finally, once UI5 is launched, it loads the list of tests configured in `webapp/test/unit/unitTests.qunit.ts`.
 
-#### The list of tests in `src/test/unit/unitTests.qunit.ts` 
+#### The list of tests in `webapp/test/unit/unitTests.qunit.ts`
 
-[`src/test/unit/unitTests.qunit.ts`](src/test/unit/unitTests.qunit.ts) imports all test files, which can be done in a very clean way thanks to the ES6 module imports.
+[`webapp/test/unit/unitTests.qunit.ts`](webapp/test/unit/unitTests.qunit.ts) imports all test files, which can be done in a very clean way thanks to the ES6 module imports. We follow the recommendation of QUnit: [QUnit.config.autostart](https://api.qunitjs.com/config/autostart/).
 
-`QUnit.config.autostart = false` must be set before QUnit thinks it can start, then the tests are imported, then `QUnit.start()` is called. There are various ways to achieve this:
+`QUnit.config.autostart = false` must be set before QUnit thinks it can start, then the tests are imported as dynamic imports like `import("unit/controller/App.qunit")` with Promise.all(...) waiting for them and then triggering `QUnit.start()` is called.
 
-* `QUnit.config.autostart = false` could be set in a separate script loaded/executed beforehand
-* The tests could be imported as dynamic imports like `import("unit/controller/App.qunit")` with Promise.all(...) waiting for them and then triggering `QUnit.start`, but this will only work when the tests actually export something
-* `QUnit.config.autostart = false`, the imports and `QUnit.start()` can simply be written one after each other, but only when the `noWrapBeforeImport` transformer setting is active
+#### The concrete tests in `webapp/test/unit/controller/App.qunit.ts`
 
-All three options are mentioned in `src/test/unit/unitTests.qunit.ts` with the third being active.
-
-#### The concrete tests in `src/test/unit/controller/App.qunit.ts`
-
-In the (very minimal) actual tests in [`src/test/unit/controller/App.qunit.ts`](src/test/unit/controller/App.qunit.ts) there is nothing surprising from TypeScript perspective. There isn't any TypeScript-specific syntax required, but of course ES6-style imports are used just like in the application code.
+In the (very minimal) actual tests in [`webapp/test/unit/controller/App.qunit.ts`](webapp/test/unit/controller/App.qunit.ts) there is nothing surprising from TypeScript perspective. There isn't any TypeScript-specific syntax required, but of course ES6-style imports are used just like in the application code.
 
 ### Integration Tests (OPA)
 
@@ -48,11 +44,11 @@ In the (very minimal) actual tests in [`src/test/unit/controller/App.qunit.ts`](
 
 #### The entry point and the list of tests
 
-Just like for the unit tests, [`src/test/integration/opaTests.qunit.html`](src/test/integration/opaTests.qunit.html) is the entry point for running the OPA tests, which loads the list of journeys configured in [`src/test/integration/opaTests.qunit.ts`](src/test/integration/opaTests.qunit.ts).
+Just like for the unit tests, [`webapp/test/integration/opaTests.qunit.html`](webapp/test/integration/opaTests.qunit.html) is the entry point for running the OPA tests, which loads the list of journeys configured in [`webapp/test/integration/opaTests.qunit.ts`](webapp/test/integration/opaTests.qunit.ts).
 
 #### The "Hello" Journey
 
-The test journey [`src/test/integration/HelloJourney.ts`](src/test/integration/HelloJourney.ts) is actually pretty straightforward.
+The test journey [`webapp/test/integration/HelloJourney.ts`](webapp/test/integration/HelloJourney.ts) is actually pretty straightforward.
 
 The only thing specific to OPA with TypeScript is that the `Given`/`When`/`Then` types in the `opaTest(...)` callbacks need to be typed. All three are typed as `Opa5`, but in case of `When` and `Then` additionally enriched with the Actions/Assertions defined in the page defiitions (see below).
 
@@ -67,13 +63,13 @@ This is where bigger changes are done compared to non-TypeScript OPA tests:
   \
   `OPA_Extension.createPageObjects_NEW_OVERLOAD("onTheAppPage", AppPageActions, AppPageAssertions);`
   \
-  The implementation of this method resides in [`src/test/integration/OPA_extension.ts`](src/test/integration/OPA_extension.ts) and is expected to move into the OPA framework in some way or another.
+  The implementation of this method resides in [`webapp/test/integration/OPA_extension.ts`](webapp/test/integration/OPA_extension.ts) and is expected to move into the OPA framework in some way or another.
 
 Apart from these changes, the implementation of the actions and assertions is done just like in plain JavaScript.
 
 #### Additional files `OPA_extension.ts` and `AllPages.ts`
 
-On top of the already mentioned [`src/test/integration/OPA_extension.ts`](src/test/integration/OPA_extension.ts) file, there is also [`src/test/integration/pages/AllPages.ts`](src/test/integration/pages/AllPages.ts), a file defining the `When`/`Then` types which hold actions/assertions from *all* pages and are hence separated out. `When` and `Then` are manually defined here in order to add the property `onTheAppPage` (as well as any further pages) along with the respective actions/assertions.
+On top of the already mentioned [`webapp/test/integration/OPA_extension.ts`](webapp/test/integration/OPA_extension.ts) file, there is also [`webapp/test/integration/pages/AllPages.ts`](webapp/test/integration/pages/AllPages.ts), a file defining the `When`/`Then` types which hold actions/assertions from *all* pages and are hence separated out. `When` and `Then` are manually defined here in order to add the property `onTheAppPage` (as well as any further pages) along with the respective actions/assertions.
 
 ## Requirements
 
