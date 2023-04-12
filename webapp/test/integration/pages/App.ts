@@ -2,18 +2,18 @@ import Opa5 from "sap/ui/test/Opa5";
 import Press from "sap/ui/test/actions/Press";
 import OPA_Extension from "../OPA_Extension"; // TODO: will be replaced by standard Opa5 once the implementation has moved there
 
-var viewName = "ui5.typescript.helloworld.view.App";
+const viewName = "ui5.typescript.helloworld.view.App";
 
 export class AppPageActions extends Opa5 {
 	and: AppPageActions // TODO: would be nice if this would not need to be defined
 
 	iPressTheSayHelloWithDialogButton() {
-		return this.waitFor({
+		return <Opa5> this.waitFor({
 			id: "helloButton",
 			viewName,
 			actions: new Press(),
 			errorMessage: "Did not find the 'Say Hello With Dialog' button on the App view"
-		}) // TODO: would be nice if this cast would not be needed
+		}) as AppPageActions & jQuery.Promise; // TODO: would be nice if this cast would not be needed
 	}
 
 	iPressTheOkButtonInTheDialog() {
