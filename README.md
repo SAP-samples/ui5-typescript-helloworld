@@ -108,11 +108,11 @@ Open http://localhost:8080/test/unit/unitTests.qunit.html to run the QUnit tests
 
 ## Limitations
 
-The ways how tests are written in TypeScript are still being improved. When you base any work on this code, be prepared to adapt later.
+The ways how OPA tests are written in TypeScript are still being improved. When you base any work on this code, be prepared to adapt later.
 
 ## Known Issues
 
-http://localhost:8080/test/testsuite.qunit.html does not find any tests
+None.
 
 ## How to Obtain Support
 
