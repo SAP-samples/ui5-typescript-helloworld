@@ -20,10 +20,10 @@ As the focus is on the TypeScript setup, the app code itself is quite minimal, i
 
 | :point_up: Overview of TypeScript-related Entities |
 |:---------------------------|
-| The UI5 type definitions (`*.d.ts` files) are loaded as dev dependency from [npm](https://www.npmjs.com/package/@openui5/ts-types-esm). They are a work in progress, so while they should be working well already, we are still improving them, which might also lead to breaking changes.<br/>
+| The UI5 type definitions (`*.d.ts` files) are loaded as dev dependency from [npm](https://www.npmjs.com/package/@types/openui5). They are a work in progress, so while they should be working well already, we are still improving them, which might also lead to breaking changes.<br/>
  The file [tsconfig.json](tsconfig.json) contains the configuration for the TypeScript compilation, including a reference to the UI5 `*.d.ts` files.<br/>
  Normally, the UI5 JavaScript files (controllers, Component.js etc.) would reside in the `webapp` folder. Now they are in the [src](src) folder. The TypeScript compilation will create the `webapp` folder and put all output there. <br/>
- In addition to the TypeScript compilation, there is also a conversion from the ES6 module and class syntax used in the source files to the classic UI5 module loading and class definition syntax (`sap.ui.define(...)` and `superClass.extend(...)`). This conversion is using the [babel-plugin-transform-modules-ui5](https://github.com/r-murphy/babel-plugin-transform-modules-ui5) project from Ryan Murphy. <br/> 
+ In addition to the TypeScript compilation, there is also a conversion from the ES6 module and class syntax used in the source files to the classic UI5 module loading and class definition syntax (`sap.ui.define(...)` and `superClass.extend(...)`). This conversion is using the [babel-plugin-transform-modules-ui5](https://github.com/ui5-community/babel-plugin-transform-modules-ui5) project from the UI5 Community (initially developed by Ryan Murphy). <br/> 
  Both, the TypeScript compilation and the ES6 syntax transformation, are executed by Babel, as configured in the file [.babelrc.json](.babelrc.json)<br/> 
  This combined transformation is triggered by both the `build:ts` and `watch:ts` scripts in [package.json](package.json). |
 
