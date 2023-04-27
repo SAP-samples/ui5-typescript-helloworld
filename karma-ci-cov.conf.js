@@ -3,7 +3,7 @@ module.exports = function (config) {
 	config.set({
 		reporters: ["progress", "coverage"],
 		preprocessors: {
-			"webapp/**/*.ts": ["ui5-transpile", "coverage"],
+			"webapp/**/*.ts": ["ui5-transpile"],
 		},
 		coverageReporter: {
 			dir: "coverage",
