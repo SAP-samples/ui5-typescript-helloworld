@@ -1,19 +1,19 @@
 import Opa5 from "sap/ui/test/Opa5";
 import Press from "sap/ui/test/actions/Press";
-import OPA_Extension from "../OPA_Extension"; // TODO: will be replaced by standard Opa5 once the implementation has moved there
+import OPA_Extension from "../OPA_Extension"; // TODO: will will no longer be needed once a standard Opa5 call is there
 
 const viewName = "ui5.typescript.helloworld.view.App";
 
 export class AppPageActions extends Opa5 {
-	and: AppPageActions // TODO: would be nice if this would not need to be defined
+	and: AppPageActions // TODO: will no longer be needed in the future (probably with the 1.115 types)
 
 	iPressTheSayHelloWithDialogButton() {
-		return <Opa5> this.waitFor({
+		return this.waitFor({
 			id: "helloButton",
 			viewName,
 			actions: new Press(),
 			errorMessage: "Did not find the 'Say Hello With Dialog' button on the App view"
-		}) as AppPageActions & jQuery.Promise; // TODO: would be nice if this cast would not be needed
+		}) as AppPageActions & jQuery.Promise; // TODO: will no longer be needed in the future (probably with the 1.115 types)
 	}
 
 	iPressTheOkButtonInTheDialog() {
@@ -23,7 +23,7 @@ export class AppPageActions extends Opa5 {
 			viewName,
 			actions: new Press(),
 			errorMessage: "Did not find the 'OK' button in the Dialog"
-		}) as AppPageActions & jQuery.Promise;
+		}) as AppPageActions & jQuery.Promise; // TODO: will no longer be needed in the future (probably with the 1.115 types)
 	}
 }
 
@@ -39,7 +39,7 @@ export class AppPageAssertions extends Opa5 {
 				Opa5.assert.ok(true, "The dialog is open");
 			},
 			errorMessage: "Did not find the dialog control"
-		}) as AppPageAssertions & jQuery.Promise;
+		}) as AppPageAssertions & jQuery.Promise; // TODO: will no longer be needed in the future (probably with the 1.115 types)
 	}
 
 	iShouldNotSeeTheHelloDialog() {
@@ -51,7 +51,7 @@ export class AppPageAssertions extends Opa5 {
 			success: function() {
 				Opa5.assert.ok(true, "No dialog is open");
 			}
-		}) as AppPageAssertions & jQuery.Promise;
+		}) as AppPageAssertions & jQuery.Promise; // TODO: will no longer be needed in the future (probably with the 1.115 types)
 	}
 }
 
