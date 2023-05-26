@@ -6,7 +6,7 @@
 
 This app demonstrates a TypeScript setup for developing UI5 applications. However, the code in this *branch* and this document <b>focus on the development of custom controls</b> within applications.
 
-For an explanation of the overall project, please check out the [README file on the `main` branch](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/README.md) and the [detailed step-by-step guide](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/step-by-step.md) for creating the setup.
+For an explanation of the overall project, please check out the [README file on the `main` branch](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/README.md) and the [detailed step-by-step guide](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/step-by-step.md) for creating the setup. For the development of control *libraries* see [this sample](https://github.com/SAP-samples/ui5-typescript-control-library).
 
 
 ## Table of Contents
@@ -56,10 +56,11 @@ npm start
 
 Just like for Controllers and other application code written in TypeScript, we suggest that Controls should be written as ES6 classes, using ES6 module imports.
 
-A very basic control could hence look as follows. Create a `src/control` folder and inside a file named MyControl.js with the following content:
+A very basic control could hence look as follows. Create a `src/control` folder and inside a file named `MyControl.js` with the following content:
 
 ```ts
 import Control from "sap/ui/core/Control";
+import type { MetadataOptions } from "sap/ui/core/Element";
 import RenderManager from "sap/ui/core/RenderManager";
 
 /**
@@ -67,7 +68,7 @@ import RenderManager from "sap/ui/core/RenderManager";
  */
 export default class MyControl extends Control {
  
-	static readonly metadata: object = {
+	static readonly metadata: MetadataOptions = {
 		properties: {
 			"text": "string"
 		}
@@ -86,8 +87,8 @@ export default class MyControl extends Control {
 }
 ```
 
-The control metadata is written as static class member, just like the renderer. It should be typed as `object` for the time being. Not typing it will lead to issues when inheriting from this control, as the TypeScript compiler will expect the same properties to be present in any derived control's metadata. But properties are inherited, so they should not be repeated.<br>
-As soon as the UI5 types come with a type for the metadata object, that type should be used instead, for best type-safety and code completion.
+The control metadata is written as static class member, just like the renderer. It should be typed as `MetadataOptions`. Make sure to import it from `sap/ui/core/Element` in case of controls, or the closest base class in general - the metadata option structure is also defined for `Object`, `ManagedObject` and `Component`. You should also use the TypeScript-specific `import type` instead of just `import` to make clear that this import is only needed for types at designtime, with no runtime impact (unless you need to import other things from the `Element` module). `MetadataOptions` is available since UI5 version 1.110; for earlier versions simply use `object` instead.<br>
+Typing the metadata object will give you type safety and code completion for this structure. Not typing it, on the other hand, will lead to issues when inheriting from this control, as the TypeScript compiler will expect the same properties to be present in any derived control's metadata. But properties are inherited, so they should not be repeated.
 
 The JSDoc comment and the `@namespace` annotation inside is required to make the [transformer plugin](https://github.com/r-murphy/babel-plugin-transform-modules-ui5) aware that the class should be transformed to classic UI5 syntax and what the full UI5 name of the class should be in the `BaseClass.extend(...)` call.
 
@@ -145,28 +146,32 @@ sap.ui.define(["sap/ui/core/Control"], function (Control) {
    * @namespace ui5.typescript.helloworld.control
    */
   const MyControl = Control.extend("ui5.typescript.helloworld.control.MyControl", {
-    constructor: function constructor() {
-      Control.prototype.constructor.apply(this, arguments);
-
-      this.onclick = function () {
-        alert("Hello World!");
-      };
-    },
-    renderer: function (rm, control) {
-      rm.openStart("div", control);
-      rm.openEnd();
-      rm.text(control.getText());
-      rm.close("div");
+    renderer: {
+      apiVersion: 2,
+      render: function (rm, control) {
+        rm.openStart("div", control);
+        rm.openEnd();
+        rm.text(control.getText());
+        rm.close("div");
+      }
     },
     metadata: {
       properties: {
         "text": "string"
       }
+    },
+    constructor: function _constructor(id, settings) {
+      Control.prototype.constructor.call(this, id, settings);
+      this.onclick = function () {
+        alert("Hello World!");
+      };
     }
   });
   return MyControl;
 });
+//# sourceMappingURL=MyControl.js.map
 ```
+The comment in the last line points the browser to a file containing the original TypeScript code and mapping of the statements, which can thus be displayed when debugging.
 
 With 
 

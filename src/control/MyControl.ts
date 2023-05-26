@@ -1,4 +1,5 @@
 import Control from "sap/ui/core/Control";
+import type { MetadataOptions } from "sap/ui/core/Element";
 import RenderManager from "sap/ui/core/RenderManager";
 
 /**
@@ -11,7 +12,7 @@ export default class MyControl extends Control {
 	constructor(id?: string, settings?: $MyControlSettings);
 	constructor(id?: string, settings?: $MyControlSettings) { super(id, settings); }
 
-	static readonly metadata: object = {
+	static readonly metadata: MetadataOptions = {
 		properties: {
 			"text": "string"
 		}
