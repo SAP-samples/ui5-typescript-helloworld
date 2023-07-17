@@ -1,25 +1,18 @@
 {
     "compilerOptions": {
-        "target": "es2015",
-        "module": "es2015",
+        "target": "es2022",
+        "module": "es2022",
         "moduleResolution": "node",
         "skipLibCheck": true,
-        "preserveConstEnums": true,
-        "inlineSourceMap": true,
         "allowJs": true,
         "strict": true,
-        "strictNullChecks": true,
         "strictPropertyInitialization": false,
-        "rootDir": "./src",
-        "outDir": "./dist",
+        "rootDir": "./webapp",
         "baseUrl": "./",
         "paths": {
-            "ui5/typescript/helloworld/*": [
-                "./src/*"
-            ]
-        }
+            "ui5/typescript/helloworld/*": ["./webapp/*"]
+        },
+        "composite": true
     },
-    "include": [
-        "./src/**/*"
-    ]
+    "include": ["./webapp/**/*"]
 }

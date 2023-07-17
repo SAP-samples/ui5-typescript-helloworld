@@ -4,7 +4,7 @@
 
 ## Description
 
-This app demonstrates a TypeScript setup for developing UI5 applications. However, the code in this *branch* and this document <b>focus on the development of custom controls</b> within applications.
+This project demonstrates a TypeScript setup for developing UI5 applications. However, the code in *this branch* and this document <b>focus on the development of custom controls</b> within applications.
 
 For an explanation of the overall project, please check out the [README file on the `main` branch](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/README.md) and the [detailed step-by-step guide](https://github.com/SAP-samples/ui5-typescript-helloworld/blob/main/step-by-step.md) for creating the setup. For the development of control *libraries* see [this sample](https://github.com/SAP-samples/ui5-typescript-control-library).
 
@@ -56,7 +56,7 @@ npm start
 
 Just like for Controllers and other application code written in TypeScript, we suggest that Controls should be written as ES6 classes, using ES6 module imports.
 
-A very basic control could hence look as follows. Create a `src/control` folder and inside a file named `MyControl.js` with the following content:
+A very basic control could hence look as follows. Create a `webapp/control` folder and inside a file named `MyControl.ts` with the following content:
 
 ```ts
 import Control from "sap/ui/core/Control";
@@ -67,18 +67,21 @@ import RenderManager from "sap/ui/core/RenderManager";
  * @namespace ui5.typescript.helloworld.control
  */
 export default class MyControl extends Control {
- 
+
 	static readonly metadata: MetadataOptions = {
 		properties: {
 			"text": "string"
 		}
 	};
 
-	static renderer = function(rm: RenderManager, control: MyControl) {
-		rm.openStart("div", control);
-		rm.openEnd();
-		rm.text(control.getText());
-		rm.close("div");
+	static renderer = {
+		apiVersion: 2,
+		render: function (rm: RenderManager, control: MyControl): void {
+			rm.openStart("div", control);
+			rm.openEnd();
+			rm.text(control.getText());
+			rm.close("div");
+		}
 	};
 
 	onclick = function() {
@@ -88,11 +91,11 @@ export default class MyControl extends Control {
 ```
 
 The control metadata is written as static class member, just like the renderer. It should be typed as `MetadataOptions`. Make sure to import it from `sap/ui/core/Element` in case of controls, or the closest base class in general - the metadata option structure is also defined for `Object`, `ManagedObject` and `Component`. You should also use the TypeScript-specific `import type` instead of just `import` to make clear that this import is only needed for types at designtime, with no runtime impact (unless you need to import other things from the `Element` module). `MetadataOptions` is available since UI5 version 1.110; for earlier versions simply use `object` instead.<br>
-Typing the metadata object will give you type safety and code completion for this structure. Not typing it, on the other hand, will lead to issues when inheriting from this control, as the TypeScript compiler will expect the same properties to be present in any derived control's metadata. But properties are inherited, so they should not be repeated.
+Typing the metadata object will give you type safety and code completion for this structure. Not typing it, on the other hand, would also lead to issues when inheriting from this control, as the TypeScript compiler will expect the same properties to be present in any derived control's metadata. But properties are inherited, so they should not be repeated.
 
 The JSDoc comment and the `@namespace` annotation inside is required to make the [transformer plugin](https://github.com/r-murphy/babel-plugin-transform-modules-ui5) aware that the class should be transformed to classic UI5 syntax and what the full UI5 name of the class should be in the `BaseClass.extend(...)` call.
 
-Actually, there are [multiple ways supported to supply the name](https://github.com/r-murphy/babel-plugin-transform-modules-ui5#configuring-name-or-namespace). You could e.g. also set the `@name` annotation:
+Actually, there are [multiple ways supported to supply the name](https://github.com/r-murphy/babel-plugin-transform-modules-ui5#configuring-name-or-namespace). You could alternatively e.g. also set the `@name` annotation:
 
 ```js
 /**
@@ -107,7 +110,7 @@ Or you could use decorators:
 export default class MyControl extends Control {
 ```
 
-Make sure to export the control class as default export and to do it immediately when the class is defined, otherwise you will run into trouble later on when the TSinterface generator is introduced to the project.
+Make sure to export the control class as default export and to do it immediately when the class is defined, otherwise you will run into trouble later on when the ts-interface-generator is introduced to the project.
 
 ### Using the Custom Control
 
@@ -134,44 +137,41 @@ Such a control is used just like other controls: declare the namespace and use t
 Use any of the provided ways for triggering the transpilation, like e.g. the watch mode or:
 
 ```sh
-npm run build:ts
+npm run build
 ```
 
-This transpiles the app including the control to regular UI5 JavaScript. It can be found in `webapp/control/MyControl.js` and looks like this - more or less like a traditional UI5 JavaScript control:
+This transpiles the app including the control to regular UI5 JavaScript. It can be found in `dist/control` in different versions (minified and a non-minified debug version) together with the original TypeScript sources and a sourcemap which allows debugging the original TypeScript code in browsers. The readable debug version in `MyControl-dbg.js` looks like this - more or less like a traditional UI5 JavaScript control:
 
 
 ```js
+"use strict";
+
 sap.ui.define(["sap/ui/core/Control"], function (Control) {
   /**
    * @namespace ui5.typescript.helloworld.control
    */
   const MyControl = Control.extend("ui5.typescript.helloworld.control.MyControl", {
-    renderer: {
-      apiVersion: 2,
-      render: function (rm, control) {
-        rm.openStart("div", control);
-        rm.openEnd();
-        rm.text(control.getText());
-        rm.close("div");
-      }
+    constructor: function constructor() {
+      Control.prototype.constructor.apply(this, arguments);
+      this.onclick = function () {
+        alert("Hello World!");
+      };
+    },
+    renderer: function (rm, control) {
+      rm.openStart("div", control);
+      rm.openEnd();
+      rm.text(control.getText());
+      rm.close("div");
     },
     metadata: {
       properties: {
         "text": "string"
       }
-    },
-    constructor: function _constructor(id, settings) {
-      Control.prototype.constructor.call(this, id, settings);
-      this.onclick = function () {
-        alert("Hello World!");
-      };
     }
   });
   return MyControl;
 });
-//# sourceMappingURL=MyControl.js.map
 ```
-The comment in the last line points the browser to a file containing the original TypeScript code and mapping of the statements, which can thus be displayed when debugging.
 
 With 
 
@@ -193,7 +193,7 @@ rm.text(control.getText())
 The error says:
 > Property 'getText' does not exist on type 'MyControl'.
 
-And indeed : ALL accessor methods for ALL properties, aggregations, associatins and events are generated by UI5 at runtime, so the TypeScript environment cannot know about them at development and build time!
+And indeed : ALL accessor methods for ALL properties, aggregations, associatins and events are generated by UI5 at *runtime*, so the TypeScript environment cannot know about them at development and build time!
 Once you use the control in your application a bit more and try to interact via its API, this issue will become apparent. But it will also hit you when accessing the API in further methods of the control, as it grows.
 
 In addition, TypeScript doesn't know anything about the constructor signatures. You can give (or omit) an ID and initialize the entire control API by constructing it like this:
@@ -202,7 +202,7 @@ In addition, TypeScript doesn't know anything about the constructor signatures. 
 new MyControl("myFirstControl", {text: "Hello World"});
 ```
 
-But again, TypeScript does not know the structure of the settings object.
+But again, TypeScript does not know the structure of the settings object, so it won't complain if you e.g. accidentally type `texxt` and it won't show you the available properties.
 
 Unfortunately, this cannot be solved by adding one more transformation step to the already existing TypeScript-to-JavaScript transpilation, because TypeScript needs to know already *within* the editor, while you are writing the code, that these methods exist!
 
@@ -231,15 +231,15 @@ To easily start this when needed, you can add the following line to the "scripts
 "watch:controls": "npx @ui5/ts-interface-generator --watch",
 ```
 
-This generates a `MyControl.gen.d.ts` with the missing method definitions and constructor settings object type and re-generates it whenever any of the TypeScript files changes.
+This generates a `MyControl.gen.d.ts` with the missing method definitions and constructor settings object type and re-generates it whenever any of the TypeScript files changes. You can see the generated file [here](webapp/control/MyControl.gen.d.ts).
 
 It is recommended to either keep this generator running in watch mode whenever you are doing changes to any control metadata or to run it once whenever such changes are completed.
 
-The `start` script configured in `package.json` only runs the TypeScript transpilation in watch mode (and reloads the browser page automatically), the `watch` script in addition also re-generates the TypeScript interfaces for controls whenever anything changes.
+The `start` script configured in `package.json` only runs the TypeScript transpilation in watch mode (and reloads the browser page automatically), the `watch:controls` script needs to be run in addition to also re-generates the TypeScript interfaces for controls whenever anything changes. (Of course another script that launches both could be added.)
 
 ### Add the Constructor Signatures
 
-There is one more thing to make the generated interface fully work and to be able to use the control fully in TypeScript code. Luckily, it's enough to do this once (for each control) and it's super-easy. In the command output of the generator, you see the following block:
+There is one more thing to make the generated interface work as expected and to be able to use the control fully in TypeScript code. Luckily, it's enough to do this once (for each control) and it's super-easy. In the command output of the generator, you see the following block:
 ```
 NOTE:
 Class MyControl in file ui5-typescript-helloworld/src/control/MyControl.ts needs to contain
@@ -282,8 +282,6 @@ To lint the TypeScript code, do:
 npm run lint
 ```
 
-(Again, when using yarn, do `yarn ts-typecheck` and `yarn lint` instead.)
-
 ## Limitations
 
 - At this time, the used eslint rules are not verified to be optimal or to be in sync with UI5 recommendations.
@@ -307,10 +305,10 @@ However, you are welcome to [reate an issue](https://github.com/SAP-samples/ui5-
 
 The <b>main entry point</b> for all TypeScript documentation related to UI5 is at: <b>https://sap.github.io/ui5-typescript</b>
 
-Once you have understood the setup and want to inspect the code of a slightly more comprehensive UI5 app written in TypeScript, you can check out the [TypeScript version of the UI5 CAP Event App Sample](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript).
+The best starting point for hands-on learning to write UI5 apps in TypeScript is the [UI5 TypeScript Tutorial](https://github.com/SAP-samples/ui5-typescript-tutorial).
 
 
 ## License
 
-Copyright (c) 2022 SAP SE or an SAP affiliate company. All rights reserved.
+Copyright (c) 2023 SAP SE or an SAP affiliate company. All rights reserved.
 This project is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSE) file.
