@@ -17,14 +17,14 @@
     "url": "https://github.com/SAP-samples/ui5-typescript-helloworld.git"
   },
   "devDependencies": {
-    "@types/openui5": "1.112.0",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
-    "@ui5/cli": "^3.0.6",
-    "eslint": "^8.37.0",
-    "typescript": "^5.0.3",
-    "ui5-middleware-livereload": "^0.8.2",
-    "ui5-middleware-simpleproxy": "^0.9.5",
-    "ui5-tooling-transpile": "^0.7.0"
+    "@types/openui5": "1.116.1",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "@ui5/cli": "^3.4.0",
+    "eslint": "^8.46.0",
+    "typescript": "^5.1.6",
+    "ui5-middleware-livereload": "^3.0.0",
+    "ui5-middleware-simpleproxy": "^3.0.0",
+    "ui5-tooling-transpile": "^3.0.1"
   }
 }
