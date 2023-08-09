@@ -46,30 +46,17 @@ In the (very minimal) actual tests in [`webapp/test/unit/controller/App.qunit.ts
 
 Just like for the unit tests, [`webapp/test/integration/opaTests.qunit.html`](webapp/test/integration/opaTests.qunit.html) is the entry point for running the OPA tests, which loads the list of journeys configured in [`webapp/test/integration/opaTests.qunit.ts`](webapp/test/integration/opaTests.qunit.ts).
 
+#### The "App" page object
+
+The page objects are written as *classes* extending `Opa5`. Inside such classes the actions and assertions are defined as instance methods. Apart from these changes, the implementation of the actions and assertions is done just like in plain JavaScript.
+
 #### The "Hello" Journey
 
-The test journey [`webapp/test/integration/HelloJourney.ts`](webapp/test/integration/HelloJourney.ts) is actually pretty straightforward.
+The test journey [`webapp/test/integration/HelloJourney.ts`](webapp/test/integration/HelloJourney.ts) is actually pretty straightforward. The main differences are the following:
 
-The only thing specific to OPA with TypeScript is that the `Given`/`When`/`Then` types in the `opaTest(...)` callbacks need to be typed. All three are typed as `Opa5`, but in case of `When` and `Then` additionally enriched with the Actions/Assertions defined in the page defiitions (see below).
-
-#### The "App" page
-
-This is where bigger changes are done compared to non-TypeScript OPA tests:
-
-1. The actions and assertions are written as *classes* extending Opa5.
-2. These classes have a self-typed `and` property, which is needed for the call chaining.
-3. Each `waitFor(...)` result type is cast to `AppPageActions & jQuery.Promise` or `AppPageAssertions & jQuery.Promise`, respectively (otherwise `.and` does not exist on them).
-4. In the last line a custom version of `Opa5.createPageObjects()` is called:
-  \
-  `OPA_Extension.createPageObjects_NEW_OVERLOAD("onTheAppPage", AppPageActions, AppPageAssertions);`
-  \
-  The implementation of this method resides in [`webapp/test/integration/OPA_extension.ts`](webapp/test/integration/OPA_extension.ts) and is expected to move into the OPA framework in some way or another.
-
-Apart from these changes, the implementation of the actions and assertions is done just like in plain JavaScript.
-
-#### Additional files `OPA_extension.ts` and `AllPages.ts`
-
-On top of the already mentioned [`webapp/test/integration/OPA_extension.ts`](webapp/test/integration/OPA_extension.ts) file, there is also [`webapp/test/integration/pages/AllPages.ts`](webapp/test/integration/pages/AllPages.ts), a file defining the `When`/`Then` types which hold actions/assertions from *all* pages and are hence separated out. `When` and `Then` are manually defined here in order to add the property `onTheAppPage` (as well as any further pages) along with the respective actions/assertions.
+* Page objects are imported and an instance is being created
+* `Given`/`When`/`Then` parameters in the `opaTest(...)` callbacks are omitted
+* On the page object the actions and assertions are called
 
 ## Requirements
 
@@ -108,7 +95,7 @@ Open http://localhost:8080/test/unit/unitTests.qunit.html to run the QUnit tests
 
 ## Limitations
 
-The ways how OPA tests are written in TypeScript are still being improved. When you base any work on this code, be prepared to adapt later.
+The ways how OPA tests are written in TypeScript are still being improved. There might be a different option in the future but the current option continues to work!
 
 ## Known Issues
 

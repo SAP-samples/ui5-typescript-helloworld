@@ -14,13 +14,13 @@ opaTest("Should open the Hello dialog", function () {
 		}
 	});
 
-	//Actions
+	// Actions
 	onTheAppPage.iPressTheSayHelloWithDialogButton();
 
 	// Assertions
 	onTheAppPage.iShouldSeeTheHelloDialog();
 
-	//Actions
+	// Actions
 	onTheAppPage.iPressTheOkButtonInTheDialog();
 
 	// Assertions
@@ -38,7 +38,7 @@ opaTest("Should close the Hello dialog", function () {
 		}
 	});
 
-	//Actions
+	// Actions
 	onTheAppPage.iPressTheSayHelloWithDialogButton()
 		.and.iPressTheOkButtonInTheDialog();
 

@@ -5,6 +5,7 @@ const viewName = "ui5.typescript.helloworld.view.App";
 
 export default class AppPage extends Opa5 {
 
+	// Actions
 	iPressTheSayHelloWithDialogButton() {
 		return this.waitFor({
 			id: "helloButton",
@@ -24,6 +25,7 @@ export default class AppPage extends Opa5 {
 		});
 	}
 
+	// Assertions
 	iShouldSeeTheHelloDialog() {
 		return this.waitFor({
 			controlType: "sap.m.Dialog",
