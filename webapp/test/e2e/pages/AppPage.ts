@@ -19,12 +19,16 @@ class AppPage {
   }
 
   async iPressTheOkButtonInTheDialog() {
-	await browser.asControl(OKButtonLocator).press()
+    await browser.asControl(OKButtonLocator).press()
   }
 
   async iShouldNotSeeTheHelloDialog(): Promise<boolean> {
     const dialog = await browser.asControl<MessageBox>(dialogLocator)
-    return await dialog.isInitialized()
+    // this returns "null" as the message box is not
+    // part of the DOM after being close, so
+    // no methods can be executed on the control
+    const visible = await dialog.getVisible()
+    return !visible
   }
 }
 
