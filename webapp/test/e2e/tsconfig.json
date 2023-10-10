@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "types": ["node", "@openui5/types", "@wdio/globals/types", "@wdio/mocha-framework", "wdio-ui5-service/esm"],
+    "types": ["node", "@types/openui5", "@wdio/globals/types", "@wdio/mocha-framework", "wdio-ui5-service/esm"],
     "target": "es2019"
   }
 }
