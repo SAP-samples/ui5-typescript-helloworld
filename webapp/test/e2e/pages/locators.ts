@@ -2,7 +2,7 @@ export const buttonLocator = {
   selector: {
     id: "container-ui5.typescript.helloworld---app--helloButton"
   }
-}
+};
 
 export const dialogLocator = {
   selector: {
@@ -12,7 +12,7 @@ export const dialogLocator = {
     },
     searchOpenDialogs: true
   }
-}
+};
 
 export const OKButtonLocator = {
   selector: {
@@ -22,4 +22,4 @@ export const OKButtonLocator = {
     },
     searchOpenDialogs: true
   }
-}
+};

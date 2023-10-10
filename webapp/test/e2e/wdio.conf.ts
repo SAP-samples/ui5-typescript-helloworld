@@ -1,4 +1,4 @@
-import { wdi5Config } from "wdio-ui5-service"
+import { wdi5Config } from "wdio-ui5-service";
 
 export const config: wdi5Config = {
     // ====================
@@ -100,8 +100,8 @@ export const config: wdi5Config = {
                     process.argv.indexOf("--headless") > -1
                         ? ["--headless"]
                         : process.argv.indexOf("--debug") > -1
-                        ? ["window-size=1440,800", "--auto-open-devtools-for-tabs"]
-                        : ["window-size=1440,800"]
+                            ? ["window-size=1440,800", "--auto-open-devtools-for-tabs"]
+                            : ["window-size=1440,800"]
             },
             acceptInsecureCerts: true
             // If outputDir is provided WebdriverIO can capture driver session logs
@@ -334,4 +334,4 @@ export const config: wdi5Config = {
      */
     // onReload: function(oldSessionId, newSessionId) {
     // }
-}
+};
