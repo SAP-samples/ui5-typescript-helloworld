@@ -6,18 +6,25 @@ This app demonstrates a TypeScript setup for developing UI5 applications. For ge
 
 :construction: **WORK IN PROGRESS** :construction:
 
-* [Unit tests (QUnit)](./webapp/test/unit/) look good: run `npm start` and open http://localhost:8080/test/unit/unitTests.qunit.html 
-* OPA tests still need additional boilerplate code and do NOT represent the final state! OPA APIs do not fit a typed language very well. Type definitions as well as APIs are being improved. Nevertheless, the OPA test code in this repository does work and is streamlined to some degree. The integration tests can be run at http://localhost:8080/test/integration/opaTests.qunit.html.
+- [Unit tests (QUnit)](./webapp/test/unit/) look good: run `npm start` and open http://localhost:8080/test/unit/unitTests.qunit.html
+- OPA tests still need additional boilerplate code and do NOT represent the final state! OPA APIs do not fit a typed language very well. Type definitions as well as APIs are being improved. Nevertheless, the OPA test code in this repository does work and is streamlined to some degree. The integration tests can be run at http://localhost:8080/test/integration/opaTests.qunit.html.
+- [End-to-end tests](./webapp/test/e2e/) are implemented with [`wdi5`](https://github.com/ui5-community/wdi5) can be run via
+  - (Terminal 1) `npm start`
+  - (Terminal 2) `npm run wdi5`
 
 ## Testing
 
 ### General Setup
 
-The tests can be executed either manually or in an automated way using Karma. The setup provides the following options:
+The tests can be executed either manually or in an automated way using Karma/`wdi5`. The setup provides the following options:
 
-1. *Manual execution*  using `npm start` and execute the tests by opening the [testsuite](http://localhost:8080/test/testsuite.qunit.html) in your browser (but you can also open the QUnit or Integration testsuite directly)
-2. *Test-driven* development by running Karma in watch mode using `npm run karma` (which triggers the test each time a source file changes)
-3. *Headless testing* by running Karma either without coverage reporting using `npm run karma-ci` or with using `npm run karma-ci-cov`
+1. _Manual execution_ using `npm start` and ...
+   - (Unit/Integration) execute the tests by opening the [testsuite](http://localhost:8080/test/testsuite.qunit.html) in your browser (but you can also open the QUnit or Integration testsuite directly)
+   - (end-to-end) execute the tests by running `npm run wdi5`
+2. _Test-driven_ development by running Karma in watch mode using `npm run karma` (which triggers the test each time a source file changes)
+3. _Headless testing_ 
+   - (Unit/Integration) by running Karma either without coverage reporting using `npm run karma-ci` or with using `npm run karma-ci-cov`
+   - (end-to-end) `npm run wdi5 -- --headless`
 
 ### Unit Tests (QUnit)
 
@@ -40,7 +47,7 @@ In the (very minimal) actual tests in [`webapp/test/unit/controller/App.qunit.ts
 ### Integration Tests (OPA)
 
 **IMPORTANT:**
-*The OPA tests in TypeScript are experimental work in progress! This means they **do** work as shown in this sample project, **but** the UI5 team is working on making the OPA APIs work better with TypeScript. Therefore, it is expected that the recommended way of writing OPA tests in TypeScript will change and be simplified over time!*
+_The OPA tests in TypeScript are experimental work in progress! This means they **do** work as shown in this sample project, **but** the UI5 team is working on making the OPA APIs work better with TypeScript. Therefore, it is expected that the recommended way of writing OPA tests in TypeScript will change and be simplified over time!_
 
 #### The entry point and the list of tests
 
@@ -48,15 +55,15 @@ Just like for the unit tests, [`webapp/test/integration/opaTests.qunit.html`](we
 
 #### The "App" page object
 
-The page objects are written as *classes* extending `Opa5`. Inside such classes the actions and assertions are defined as instance methods. Apart from these changes, the implementation of the actions and assertions is done just like in plain JavaScript.
+The page objects are written as _classes_ extending `Opa5`. Inside such classes the actions and assertions are defined as instance methods. Apart from these changes, the implementation of the actions and assertions is done just like in plain JavaScript.
 
 #### The "Hello" Journey
 
 The test journey [`webapp/test/integration/HelloJourney.ts`](webapp/test/integration/HelloJourney.ts) is actually pretty straightforward. The main differences are the following:
 
-* Page objects are imported and an instance is being created
-* `Given`/`When`/`Then` parameters in the `opaTest(...)` callbacks are omitted
-* On the page object the actions and assertions are called
+- Page objects are imported and an instance is being created
+- `Given`/`When`/`Then` parameters in the `opaTest(...)` callbacks are omitted
+- On the page object the actions and assertions are called
 
 ## Requirements
 
@@ -92,6 +99,8 @@ npm start
 As shown in the terminal after executing this command, the app is then running on http://localhost:8080/index.html. A browser window with this URL should automatically open.
 
 Open http://localhost:8080/test/unit/unitTests.qunit.html to run the QUnit tests.
+
+Execute `npm run wdi5` to run the end-to-end tests.
 
 ## Limitations
 
