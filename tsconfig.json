@@ -1,18 +1,18 @@
 {
-    "compilerOptions": {
-        "target": "es2022",
-        "module": "es2022",
-        "moduleResolution": "node",
-        "skipLibCheck": true,
-        "allowJs": true,
-        "strict": true,
-        "strictPropertyInitialization": false,
-        "rootDir": "./webapp",
-        "baseUrl": "./",
-        "paths": {
-            "ui5/typescript/helloworld/*": ["./webapp/*"]
-        },
-        "composite": true
+  "compilerOptions": {
+  "target": "es2023",
+    "module": "es2022",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "allowJs": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "rootDir": "./webapp",
+    "baseUrl": "./",
+    "paths": {
+      "ui5/typescript/helloworld/*": ["./webapp/*"]
     },
-    "include": ["./webapp/**/*"]
+    "composite": true
+  },
+  "include": ["./webapp/**/*"]
 }
