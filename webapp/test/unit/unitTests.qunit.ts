@@ -1,3 +1,4 @@
+/* @sapUiRequire */
 // https://api.qunitjs.com/config/autostart/
 QUnit.config.autostart = false;
 
