@@ -8,6 +8,7 @@ import Device from "sap/ui/Device";
 export default class Component extends UIComponent {
 
 	public static metadata = {
+		interfaces: ["sap.ui.core.IAsyncContentCreation"],
 		manifest: "json"
 	};
 

@@ -4,7 +4,7 @@ This guide explains step-by-step and command-by-command how you get to a complet
 
 While you can get started faster by just copying and modifying the entire *Hello World* app, this step-by-step guide will help you understand every bit and piece of the setup and how the pieces fit together.
 
-It consists of ten steps, but in fact only the first half is really related to TypeScript. The remaining five steps are about adding the UI5 tools to the project and wrapping everything up nicely, so these steps apply more or less to any UI5 application project.
+It consists of ten steps, but in fact only the first four steps and step six are really related to TypeScript. The other steps are about adding the UI5 tools to the project and wrapping everything up nicely, so these steps apply more or less to any UI5 application project.
 
 ## Table of Contents
 
@@ -238,7 +238,7 @@ metadata:
 type: application
 ```
 
-For running UI5 applications with the UI5 Tooling we also need some additional `framework` information like framework `name` and `version`) and the required libraries and theme libraries. Now put the following content in your `ui5.yaml` (please adopt the `metadata > name` to `ui5.typescript.helloworld`):
+For running UI5 applications with the UI5 Tooling we also need some additional `framework` information (like framework `name` and `version`) and the required libraries and theme libraries. Now put the following content in your `ui5.yaml` (please adopt the `metadata > name` to `ui5.typescript.helloworld`):
 
 ```yaml
 specVersion: "3.0"
@@ -284,8 +284,8 @@ What you can do now: create a simple `test.html` file in the `webapp` folder and
             src="resources/sap-ui-core.js"
             data-sap-ui-libs="sap.m"
             data-sap-ui-theme="sap_horizon"
-            data-sap-ui-compatVersion="edge"
-            data-sap-ui-oninit="onInit"
+            data-sap-ui-compat-version="edge"
+            data-sap-ui-on-init="onInit"
             data-sap-ui-async="true"
     ></script>
     <script>
@@ -307,7 +307,7 @@ What you can do now: create a simple `test.html` file in the `webapp` folder and
 </html>
 ```
 
-After you can start the `test.html` running inside the development server of the UI5 CLI Tooling:
+After that, you can start the `test.html` running inside the development server of the UI5 CLI Tooling:
 
 ```sh
 npx ui5 serve -o test.html
@@ -473,6 +473,14 @@ npx ui5 serve -o index.html --config ui5-dist.yaml
 
 Now it's time to write down the various commands used so far as scripts in `package.json`, so you don't need to type them every time they are used.
 
+While we are at it, we can add one more command: the `ui5-linter`, which complements eslint with code checks that make sure the code adheres to the best practices and is ready for UI5 2.0:
+
+```sh
+npm install --save-dev @ui5/linter
+```
+
+It can be invoked using `npx ui5lint`.
+
 Change the `"scripts"` section in the `package.json` file to have the following content. All scripts have already been used and explained earlier, so there is nothing new here, it's just for convenience.
 
 ```json
@@ -482,7 +490,8 @@ Change the `"scripts"` section in the `package.json` file to have the following 
     "start": "ui5 serve --port 8080 -o index.html",
     "start:dist": "ui5 serve  --port 8080 -o index.html --config ui5-dist.yaml",
     "ts-typecheck": "tsc --noEmit",
-    "lint": "eslint webapp"
+    "lint": "eslint webapp",
+    "ui5lint": "ui5lint"
 }
 ```
 
