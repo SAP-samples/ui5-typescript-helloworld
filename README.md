@@ -2,6 +2,8 @@
 
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/ui5-typescript-helloworld)](https://api.reuse.software/info/github.com/SAP-samples/ui5-typescript-helloworld)
 
+Note: in general, all information relevant for UI5 application development in TypeScript can be found at https://sap.github.io/ui5-typescript
+
 ## Description
 
 This app demonstrates a TypeScript setup for developing UI5 applications.
@@ -12,11 +14,13 @@ As the focus is on the TypeScript setup, the app code itself is quite minimal, i
 
 **In the [custom-controls](https://github.com/SAP-samples/ui5-typescript-helloworld/tree/custom-controls) branch, this repository also contains instructions and an example how custom controls can be developed in TypeScript within applications.**
 
+**In the [ui5-2.0](https://github.com/SAP-samples/ui5-typescript-helloworld/tree/ui5-2.0) branch, this repository demonstrates how an application can be tested against the type definitions (and runtime) of the upcoming UI5 2.x version.**
+
 **The [TypeScript branch of the "UI5 CAP Event App"](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript) sample demonstrates a slightly more complex application, using the same setup. It comes with an [explanation](https://github.com/SAP-samples/ui5-cap-event-app/blob/typescript/docs/typescript.md) of what UI5 TypeScript code usually looks like and what to consider.**
 
-**The UI5con 2021 session on TypeScript ([recording available at YouTube](https://www.youtube.com/watch?v=aXzcsOZH4q8)) explains the overall approach for TypeScript and UI5.**
+The UI5con 2021 session on TypeScript ([recording available at YouTube](https://www.youtube.com/watch?v=aXzcsOZH4q8)) explains the overall approach for TypeScript and UI5.
 
-**There is also an [application template](https://github.com/ui5-community/generator-ui5-ts-app) (based on yeoman and easy-ui5) which has been shown in the [UI5con Keynote](https://www.youtube.com/watch?v=aXzcsOZH4q8) and explained in [this blog](https://blogs.sap.com/2021/07/01/getting-started-with-typescript-for-ui5-application-development/).**
+There is also an [application template](https://github.com/ui5-community/generator-ui5-ts-app) (based on yeoman and easy-ui5) which has been shown in the [UI5con Keynote](https://www.youtube.com/watch?v=aXzcsOZH4q8) and explained in [this blog](https://blogs.sap.com/2021/07/01/getting-started-with-typescript-for-ui5-application-development/).
 
 | :point_up: Overview of TypeScript-related Entities |
 |:---------------------------|
