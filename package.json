@@ -18,7 +18,7 @@
     "url": "https://github.com/SAP-samples/ui5-typescript-helloworld.git"
   },
   "devDependencies": {
-    "@types/openui5": "1.127.0",
+    "@types/openui5": "https://sdk.openui5.org/nightly/2/-/types.tgz",
     "@ui5/cli": "^4",
     "@ui5/linter": "^1.1.1",
     "eslint": "^9.13.0",

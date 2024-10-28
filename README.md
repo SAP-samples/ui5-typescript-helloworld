@@ -1,6 +1,31 @@
-# A Small TypeScript UI5 Example App
+# A Small TypeScript UI5 Example App - UI5 2.x Version
 
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/ui5-typescript-helloworld)](https://api.reuse.software/info/github.com/SAP-samples/ui5-typescript-helloworld)
+
+## *IMPORTANT* - This is the UI5 2.x Branch! Info in this Section only
+
+This branch demonstrates how a UI5 application written in TypeScript can already make use of UI5 2.0 and the UI5 2.0 type definitions before the official release.
+
+> ***NOTE:*** This branch is an exact copy of the `main` branch, except for this section here. There is no UI5 2.x specific information in other parts of the documentation; the other parts may even contradict because they have not been adapted. But actually, the difference is minimal and can be fully described as follows:
+
+To adapt the app to use the preview version of OpenUI5 2.0:
+1. Change the bootstrap to load UI5 from https://sdk.openui5.org/nightly/2/. You can do so by changing the UI5 URL in `index.html` from just `src="resources/sap-ui-core.js"` to:
+   ```
+   src="https://sdk.openui5.org/nightly/2/resources/sap-ui-core.js"
+   ```
+   The same can be done in `test.html`.
+   *Note:* there is no UI5 2.x version available from npm  or via the UI5 tooling yet.
+2. Change the line in `package.json`, which declares the `@openui5/types` dev dependency, to:
+   ```
+   "@types/openui5": "https://sdk.openui5.org/nightly/2/-/types.tgz",
+   ```
+   Then, do `npm install` again.
+
+Everything else in the app can remain unchanged, as it is already built according to the best practices. Also, all instructions in the `main` branch for UI5 1.x still apply (except the two changes above).
+
+To summarize, you can test your existing app's compatibility with OpenUI5 2.x by loading the framework from https://sdk.openui5.org/nightly/2/resources/sap-ui-core.js and using the type definitions from https://sdk.openui5.org/nightly/2/-/types.tgz.
+
+The SAPUI5 2.x preview framework and type definitions are not yet available.
 
 ## Description
 
