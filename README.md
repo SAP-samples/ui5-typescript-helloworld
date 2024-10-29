@@ -15,11 +15,15 @@ To adapt the app to use the preview version of OpenUI5 2.0:
    ```
    The same can be done in `test.html`.
    *Note:* there is no UI5 2.x version available from npm  or via the UI5 tooling yet.
-2. Change the line in `package.json`, which declares the `@openui5/types` dev dependency, to:
+2. For installing the UI5 2.x preview type definitions, do:
+   ```
+   npm install --save-dev https://sdk.openui5.org/nightly/2/-/types.tgz
+   ```
+   If you already have the `@openui5/types` dev dependency, you could also change the line in `package.json` to:
    ```
    "@types/openui5": "https://sdk.openui5.org/nightly/2/-/types.tgz",
    ```
-   Then, do `npm install` again.
+   and `npm install` again.
 
 Everything else in the app can remain unchanged, as it is already built according to the best practices. Also, all instructions in the `main` branch for UI5 1.x still apply (except the two changes above).
 
