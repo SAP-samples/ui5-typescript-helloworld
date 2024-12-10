@@ -2,7 +2,7 @@ sap.ui.define(function () {
 	"use strict";
 
 	return {
-		name: "QUnit test suite for TSTodos",
+		name: "Testsuite for the TypesScript Hello World app",
 		defaults: {
 			page: "ui5://test-resources/ui5/typescript/helloworld/Test.qunit.html?testsuite={suite}&test={name}",
 			qunit: {
@@ -24,10 +24,10 @@ sap.ui.define(function () {
 		},
 		tests: {
 			"unit/unitTests": {
-				title: "Retrieving message toast elements with OPA5"
+				title: "QUnit test suite for the TypesScript Hello World app"
 			},
 			"integration/opaTests": {
-				title: "Retrieving message toast elements with OPA5"
+				title: "Integration tests for the TypeScript Hello World app"
 			},
 		}
 	};
