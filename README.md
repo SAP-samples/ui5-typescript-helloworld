@@ -23,7 +23,7 @@ The tests can be executed either manually or in an automated way using Karma. Th
 
 > Note: `QUnit` is globally defined and its types are automatically required by the UI5 types. So there is no setup needed to use it. However, in order to allow cleaner code that does not access any globals, starting with UI5 1.112, QUnit can be explicitly imported like this: `import QUnit from "sap/ui/thirdparty/qunit-2";`
 
-#### The entry point for Unit tests
+#### The entry point for unit tests
 
 The main entry point for running tests is [`webapp/test/testsuite.qunit.html`](webapp/test/testsuite.qunit.html). This file initializes the testing framework (QUnit) and serves as the consolidated starting point for all tests.
 
