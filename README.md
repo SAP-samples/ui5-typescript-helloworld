@@ -27,7 +27,7 @@ The tests can be executed either manually or in an automated way using Karma. Th
 
 The main entry point for running tests is [`webapp/test/testsuite.qunit.html`](webapp/test/testsuite.qunit.html). This file initializes the testing framework (QUnit) and serves as the consolidated starting point for all tests.
 
-From this entry point, you can choose to run either unit or integration tests. When the **unit/unitTests** link is selected, the UI5 framework is launched, and it loads the list of test cases specified in [`webapp/test/unit/unitTests.qunit.ts`](webapp/test/unit/unitTests.qunit.ts). A shortcut to launch directly the unit tests is `/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=unit/unitTests`
+From this entry point, you can choose whether to run either unit or integration tests. When the **unit/unitTests** link is selected, the UI5 framework is launched. It then loads the list of test cases specified in [`webapp/test/unit/unitTests.qunit.ts`](webapp/test/unit/unitTests.qunit.ts). A shortcut to launch the unit tests directly is `/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=unit/unitTests`
 
 #### The list of tests in `webapp/test/unit/unitTests.qunit.ts`
 
