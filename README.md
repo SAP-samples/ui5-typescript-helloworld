@@ -31,7 +31,7 @@ From this entry point, you can choose to run either unit or integration tests. W
 
 #### The list of tests in `webapp/test/unit/unitTests.qunit.ts`
 
-[`webapp/test/unit/unitTests.qunit.ts`](webapp/test/unit/unitTests.qunit.ts) imports all test files, which can be done in a very clean way thanks to the ES6 module imports.
+The [`webapp/test/unit/unitTests.qunit.ts`](webapp/test/unit/unitTests.qunit.ts) script imports all test files. Thanks to the ES6 module imports, this is done in a very clean way.
 
 #### The concrete tests in `webapp/test/unit/controller/App.qunit.ts`
 
