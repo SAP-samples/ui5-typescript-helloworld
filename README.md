@@ -23,15 +23,15 @@ The tests can be executed either manually or in an automated way using Karma. Th
 
 > Note: `QUnit` is globally defined and its types are automatically required by the UI5 types. So there is no setup needed to use it. However, in order to allow cleaner code that does not access any globals, starting with UI5 1.112, QUnit can be explicitly imported like this: `import QUnit from "sap/ui/thirdparty/qunit-2";`
 
-#### The entry point in `unitTests.qunit.html`
+#### The entry point for unit tests
 
-[`webapp/test/unit/unitTests.qunit.html`](webapp/test/unit/unitTests.qunit.html) is the entry point for running the tests, it loads QUnit etc. and finally, once UI5 is launched, it loads the list of tests configured in `webapp/test/unit/unitTests.qunit.ts`.
+The main entry point for running tests is [`webapp/test/testsuite.qunit.html`](webapp/test/testsuite.qunit.html). This file initializes the testing framework (QUnit) and serves as the consolidated starting point for all tests.
+
+From this entry point, you can choose whether to run either unit or integration tests. When the **unit/unitTests** link is selected, the UI5 framework is launched. It then loads the list of test cases specified in [`webapp/test/unit/unitTests.qunit.ts`](webapp/test/unit/unitTests.qunit.ts). A shortcut to launch the unit tests directly is `/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=unit/unitTests`
 
 #### The list of tests in `webapp/test/unit/unitTests.qunit.ts`
 
-[`webapp/test/unit/unitTests.qunit.ts`](webapp/test/unit/unitTests.qunit.ts) imports all test files, which can be done in a very clean way thanks to the ES6 module imports. We follow the recommendation of QUnit: [QUnit.config.autostart](https://api.qunitjs.com/config/autostart/).
-
-`QUnit.config.autostart = false` must be set before QUnit thinks it can start, then the tests are imported as dynamic imports like `import("unit/controller/App.qunit")` with Promise.all(...) waiting for them and then triggering `QUnit.start()` is called.
+The [`webapp/test/unit/unitTests.qunit.ts`](webapp/test/unit/unitTests.qunit.ts) script imports all test files. Thanks to the ES6 module imports, this is done in a very clean way.
 
 #### The concrete tests in `webapp/test/unit/controller/App.qunit.ts`
 
@@ -44,7 +44,7 @@ In the (very minimal) actual tests in [`webapp/test/unit/controller/App.qunit.ts
 
 #### The entry point and the list of tests
 
-Just like for the unit tests, [`webapp/test/integration/opaTests.qunit.html`](webapp/test/integration/opaTests.qunit.html) is the entry point for running the OPA tests, which loads the list of journeys configured in [`webapp/test/integration/opaTests.qunit.ts`](webapp/test/integration/opaTests.qunit.ts).
+Just like for the unit tests, [`webapp/test/testsuite.qunit.html`](webapp/test/testsuite.qunit.html) is the entry point for running the OPA tests, which loads the list of journeys configured in [`webapp/test/integration/opaTests.qunit.ts`](webapp/test/integration/opaTests.qunit.ts). Select the **integration/opaTests** option to run the OPA tests in a separate window or use the following URL: `/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=integration/opaTests`
 
 #### The "App" page object
 
