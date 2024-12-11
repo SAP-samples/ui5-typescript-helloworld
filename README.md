@@ -44,7 +44,7 @@ In the (very minimal) actual tests in [`webapp/test/unit/controller/App.qunit.ts
 
 #### The entry point and the list of tests
 
-Just like for the unit tests, [`webapp/test/testsuite.qunit.html`](webapp/test/testsuite.qunit.html) is the entry point for running the OPA tests, which loads the list of journeys configured in [`webapp/test/integration/opaTests.qunit.ts`](webapp/test/integration/opaTests.qunit.ts). Select the **integration/opaTests** option to run the OPA tests in a separate window or use the following url: `/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=integration/opaTests`
+Just like for the unit tests, [`webapp/test/testsuite.qunit.html`](webapp/test/testsuite.qunit.html) is the entry point for running the OPA tests, which loads the list of journeys configured in [`webapp/test/integration/opaTests.qunit.ts`](webapp/test/integration/opaTests.qunit.ts). Select the **integration/opaTests** option to run the OPA tests in a separate window or use the following URL: `/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=integration/opaTests`
 
 #### The "App" page object
 
