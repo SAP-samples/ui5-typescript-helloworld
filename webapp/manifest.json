@@ -33,7 +33,6 @@
 		"rootView": {
 			"viewName": "ui5.typescript.helloworld.view.App",
 			"type": "XML",
-			"async": true,
 			"id": "app"
 		},
 

@@ -5,19 +5,24 @@
 	xmlns:mvc="sap.ui.core.mvc">
 
 	<App id="app">
-		<MessagePage
+		<Page
 			title="Hello World"
-			text="This is a UI5 TypeScript Hello World app"
-			icon="sap-icon://accept"
-			id="page"
-			description="">
-			<buttons>
-				<Button
-					id="helloButton"
-					text="Say Hello"
-					press="sayHello" />
-			</buttons>
-		</MessagePage>
+			id="page">
+			<content>
+				<IllustratedMessage
+					title="Hello World"
+					illustrationType="sapIllus-SuccessHighFive"
+					enableVerticalResponsiveness="true"
+					description="This is a UI5 TypeScript Hello World app">
+					<additionalContent>
+						<Button
+							id="helloButton"
+							text="Say Hello"
+							press="sayHello" />
+					</additionalContent>
+				</IllustratedMessage>
+			</content>
+		</Page>
 	</App>
 
 </mvc:View>
