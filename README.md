@@ -1,68 +1,127 @@
 # A Small TypeScript UI5 Example App with Tests
 
-This app demonstrates a TypeScript setup for developing UI5 applications. For general documentation, please see the [`main` branch](https://github.com/SAP-samples/ui5-typescript-helloworld/tree/main) of this repository.
+**This `testing` branch demonstrates how UI5 tests are best written in TypeScript.** 
+> In general, this "hello world" app demonstrates a TypeScript setup for developing UI5 applications. For documentation regarding the general setup, please see the [`main` branch](https://github.com/SAP-samples/ui5-typescript-helloworld/tree/main) of this repository. For general UI5 TypeScript information go to https://sap.github.io/ui5-typescript.
 
-**This `testing` branch explores how tests are best written in TypeScript.**
+### **TL;DR** - Summary
 
-:construction: **WORK IN PROGRESS** :construction:
+The two structural code differences to writing tests in *JavaScript* are:
+1. The **OPA Pages are simply classes extending `Opa5`, having the actions and assertions as class methods**.
+2. The **OPA Journeys do not use the `Given`/`When`/`Then` objects, but call actions and assertions directly on the Page objects**. 
 
-* [Unit tests (QUnit)](./webapp/test/unit/) look good: run `npm start` and open http://localhost:8080/test/unit/unitTests.qunit.html 
-* OPA tests still need additional boilerplate code and do NOT represent the final state! OPA APIs do not fit a typed language very well. Type definitions as well as APIs are being improved. Nevertheless, the OPA test code in this repository does work and is streamlined to some degree. The integration tests can be run at http://localhost:8080/test/integration/opaTests.qunit.html.
+This simplifies the test code a lot and at the same time avoids type complications in TypeScript caused by OPA APIs not fitting a typed language. 
+All other testing code is converted from JavaScript in the same way as regular application code is (i.e. using real ECMAScript classes and modules).
 
-## Testing
+Also, the configuration to instrument code for coverage reporting is different from the JavaScript setup. The `istanbul` library needs to be added to the Babel config of `ui5-tooling-transpile-middleware` in `ui5.yaml`.
 
-### General Setup
+### NOTE
 
-The tests can be executed either manually or in an automated way using Karma. The setup provides the following options:
+The overall test setup has been modernized by using the [`ui5-test-runner`](https://github.com/ArnaudBuchholz/ui5-test-runner) instead of deprecated `karma`.
 
-1. *Manual execution*  using `npm start` and execute the tests by opening the [testsuite](http://localhost:8080/test/testsuite.qunit.html) in your browser (but you can also open the QUnit or Integration testsuite directly)
-2. *Test-driven* development by running Karma in watch mode using `npm run karma` (which triggers the test each time a source file changes)
-3. *Headless testing* by running Karma either without coverage reporting using `npm run karma-ci` or with using `npm run karma-ci-cov`
 
-### Unit Tests (QUnit)
+## Running Tests
 
-> Note: `QUnit` is globally defined and its types are automatically required by the UI5 types. So there is no setup needed to use it. However, in order to allow cleaner code that does not access any globals, starting with UI5 1.112, QUnit can be explicitly imported like this: `import QUnit from "sap/ui/thirdparty/qunit-2";`
+Once the project is set up (`git clone` and `npm install`, see further down), the tests can be executed either manually or in an automated way using [`ui5-test-runner`](https://github.com/ArnaudBuchholz/ui5-test-runner). The setup provides the following options:
 
-#### The entry point for unit tests
+1. *Manual execution*: use `npm start` and then execute the tests by opening the [testsuite](http://localhost:8080/test/testsuite.qunit.html) ([http://localhost:8080/test/testsuite.qunit.html](http://localhost:8080/test/testsuite.qunit.html)) in your browser. You can also directly launch the [QUnit tests](http://localhost:8080/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=unit/unitTests) or the [Integration tests](http://localhost:8080/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=integration/opaTests) individually.
+<!-- 2. *Test-driven* development by running Karma in watch mode using `npm run karma` (which triggers the test each time a source file changes) -->
+2. *Headless testing*: launch test-runner either *without* coverage reporting using `npm run test-runner` or *with* coverage using `npm run test-runner-coverage`.
 
-The main entry point for running tests is [`webapp/test/testsuite.qunit.html`](webapp/test/testsuite.qunit.html). This file initializes the testing framework (QUnit) and serves as the consolidated starting point for all tests.
+## Writing Unit Tests (QUnit)
 
-From this entry point, you can choose whether to run either unit or integration tests. When the **unit/unitTests** link is selected, the UI5 framework is launched. It then loads the list of test cases specified in [`webapp/test/unit/unitTests.qunit.ts`](webapp/test/unit/unitTests.qunit.ts). A shortcut to launch the unit tests directly is `/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=unit/unitTests`
+Writing [Unit tests (QUnit)](./webapp/test/unit/) in TypeScript is straightforward, just as you know it from JavaScript.
 
-#### The list of tests in `webapp/test/unit/unitTests.qunit.ts`
+> Note: `QUnit` is globally defined and its types are automatically required by the UI5 types. So there is no setup needed to use it. However, in order to allow clean code that does not access any globals, starting with UI5 1.112, QUnit should be explicitly imported like this: `import QUnit from "sap/ui/thirdparty/qunit-2";`
 
-The [`webapp/test/unit/unitTests.qunit.ts`](webapp/test/unit/unitTests.qunit.ts) script imports all test files. Thanks to the ES6 module imports, this is done in a very clean way.
+### Declararing the integration testsuite  `webapp/test/testsuite.qunit.ts`
 
-#### The concrete tests in `webapp/test/unit/controller/App.qunit.ts`
+As required by (and documented with) the [UI5 Test Starter](https://ui5.sap.com/sdk/#/topic/22f50c0f0b104bf3ba84620880793d3f), the unit testsuite is registered in the central [testsuite configuration](webapp/test/testsuite.qunit.ts). This makes it show up in http://localhost:8080/test/testsuite.qunit.html.
 
-In the (very minimal) actual tests in [`webapp/test/unit/controller/App.qunit.ts`](webapp/test/unit/controller/App.qunit.ts) there is nothing surprising from TypeScript perspective. There isn't any TypeScript-specific syntax required, but of course ES6-style imports are used just like in the application code.
+### The list of tests in `webapp/test/unit/unitTests.qunit.ts`
 
-### Integration Tests (OPA)
+[`webapp/test/unit/unitTests.qunit.ts`](webapp/test/unit/unitTests.qunit.ts) is the entry point which simply imports all unit tests. This is a direct translation from the [JavaScript code](https://github.com/SAP/openui5-sample-app/blob/main/webapp/test/unit/unitTests.qunit.js) to TypeScript (in this case more specifically: to ES modules).
 
-**IMPORTANT:**
-*The OPA tests in TypeScript are experimental work in progress! This means they **do** work as shown in this sample project, **but** the UI5 team is working on making the OPA APIs work better with TypeScript. Therefore, it is expected that the recommended way of writing OPA tests in TypeScript will change and be simplified over time!*
+### The actual tests in `webapp/test/unit/controller/App.qunit.ts`
 
-#### The entry point and the list of tests
+In the (very minimal) actual tests in [`webapp/test/unit/controller/App.qunit.ts`](webapp/test/unit/controller/App.qunit.ts) there is nothing surprising from TypeScript perspective. There isn't any TypeScript-specific syntax required, but of course ES6-style imports are used just like in TypeScript application code. This is the only significant difference compared to the [JavaScript way](https://github.com/SAP/openui5-sample-app/blob/main/webapp/test/unit/controller/App.controller.js) of writing UI5 QUnit tests.
 
-Just like for the unit tests, [`webapp/test/testsuite.qunit.html`](webapp/test/testsuite.qunit.html) is the entry point for running the OPA tests, which loads the list of journeys configured in [`webapp/test/integration/opaTests.qunit.ts`](webapp/test/integration/opaTests.qunit.ts). Select the **integration/opaTests** option to run the OPA tests in a separate window or use the following URL: `/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=integration/opaTests`
 
-#### The "App" page object
+## Writing Integration Tests (OPA)
 
-The page objects are written as *classes* extending `Opa5`. Inside such classes the actions and assertions are defined as instance methods. Apart from these changes, the implementation of the actions and assertions is done just like in plain JavaScript.
+OPA tests are written in a simplified and slightly different way compared to JavaScript, so make sure to carefully read this section.
 
-#### The "Hello" Journey
+### Declararing the integration testsuite in `webapp/test/testsuite.qunit.ts`
 
-The test journey [`webapp/test/integration/HelloJourney.ts`](webapp/test/integration/HelloJourney.ts) is actually pretty straightforward. The main differences are the following:
+Just like for the unit tests, as required by (and documented with) the [UI5 Test Starter](https://ui5.sap.com/sdk/#/topic/22f50c0f0b104bf3ba84620880793d3f), the integration testsuite is registered in the central [testsuite configuration](webapp/test/testsuite.qunit.ts). This makes it show up in http://localhost:8080/test/testsuite.qunit.html.
 
-* Page objects are imported and an instance is being created
-* `Given`/`When`/`Then` parameters in the `opaTest(...)` callbacks are omitted
-* On the page object the actions and assertions are called
+### The list of tests in `webapp/test/integration/opaTests.qunit.ts`
 
-## Requirements
+Just like for the unit tests, [`webapp/test/integration/opaTests.qunit.ts`](webapp/test/integration/opaTests.qunit.ts) imports the available tests - in this case the journeys - as ES modules.
 
-Either [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/), or [pnpm](https://pnpm.io/) for dependency management.
+### The "Hello" Journey
 
-## Download and Installation
+The test journey [`webapp/test/integration/HelloJourney.ts`](webapp/test/integration/HelloJourney.ts) is pretty straightforward, but it comes with one significant difference to JavaScript: the `Given`/`When`/`Then` objects normally given to the `opaTest(...)` callback are **not used at all!**<br>
+Instead, the actions and assertions are called directly on the OPA test Page (in this case the `AppPage`). The same goes for setup and teardown functions like `iStartMyUIComponent` and `iTeardownMyApp`, which are also available on the Page, as it inherits from `Opa5`.
+
+You are free to make the difference between actions and assertions clear with comments, but there is no need to carry different entities around through the code, especially as those entities are hard to fit into the TypeScript world.
+
+### The "App" page
+
+This is where the biggest changes are done compared to non-TypeScript OPA tests: the OPA Pages are simply classes extending `Opa5`, having the actions and assertions as class methods.
+
+Apart from this, the implementation of the actions and assertions is done just like in JavaScript.
+
+
+## Code Coverage Reporting in TypeScript
+
+The difference to JavaScript in the overall project testing setup is that the code instrumentation for coverage reporting does not work with `@ui5/middleware-code-coverage`. Instead, the Babel plugin `istanbul` needs to be set up in the Babel configuration of the `ui5-tooling-transpile` middleware. This is also documented by the [`ui5-test-runner`](https://github.com/ArnaudBuchholz/ui5-test-runner/blob/main/docs/coverage.md#typescript-ui5cli-projects).
+
+
+### 1. Configuration in `ui5-coverage.yaml`
+
+Code instrumentation is not always needed, only for coverage tests. Hence, create an additional configuration file `ui5-coverage.yaml` as copy of `ui5.yaml` with the `ui5-tooling-transpile-middleware` section extended like this. The respective npm script in `package.json` will then reference this file.
+
+```yaml
+    - name: ui5-tooling-transpile-middleware
+      afterMiddleware: compression
+      configuration:
+        debug: true
+        babelConfig:
+          sourceMaps: true
+          ignore:
+          - "**/*.d.ts"
+          presets:
+          - - "@babel/preset-env"
+            - targets: defaults
+          - - transform-ui5
+          - "@babel/preset-typescript"
+          plugins:
+          - istanbul
+```
+
+### 2. Add `babel-plugin-istanbul` Dependency
+
+Add the `babel-plugin-istanbul` referenced in the last line above to the project's dev dependencies:
+
+```sh
+npm i --save-dev babel-plugin-istanbul
+```
+
+### 3. Use `.nycrc.json` to Exclude Test Files from Coverage
+
+To exclude the test files from coverage reporting, create a `.nycrc.json` file with the following content:
+
+```json
+{
+    "all": true,
+    "sourceMap": false,
+    "exclude": [
+        "**/test/**/*.ts"
+    ]
+}
+```
+
+## Setting up this Project
 
 1. Clone the project and switch to the `testing` branch:
 
@@ -72,30 +131,24 @@ Either [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/), or [pnpm](ht
    git checkout testing
    ```
 
-   (or download from https://github.com/SAP-samples/ui5-typescript-helloworld/archive/refs/heads/testing.zip)
-   &nbsp;
-
 1. Install the dependencies:
 
    ```sh
    npm install
    ```
 
-## Run the App and the Tests
+1. Execute the following command to run the app locally for development in watch mode (the browser reloads the app automatically when there are changes in the source code):
 
-Execute the following command to run the app locally for development in watch mode (the browser reloads the app automatically when there are changes in the source code):
+   ```sh
+   npm start
+   ```
 
-```sh
-npm start
-```
+   As shown in the terminal after executing this command, the app is then running on http://localhost:8080/index.html. A browser window with this URL should automatically open.
 
-As shown in the terminal after executing this command, the app is then running on http://localhost:8080/index.html. A browser window with this URL should automatically open.
-
-Open http://localhost:8080/test/unit/unitTests.qunit.html to run the QUnit tests.
 
 ## Limitations
 
-The ways how OPA tests are written in TypeScript are still being improved. There might be a different option in the future but the current option continues to work!
+The ways how OPA tests are written in TypeScript might still be improved further.
 
 ## Known Issues
 
@@ -109,5 +162,5 @@ The sample code is provided **as-is**. No support is provided.
 
 ## License
 
-Copyright (c) 2023 SAP SE or an SAP affiliate company. All rights reserved.
+Copyright (c) 2023-2025 SAP SE or an SAP affiliate company. All rights reserved.
 This project is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSE) file.
