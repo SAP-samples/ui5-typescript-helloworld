@@ -5,14 +5,16 @@
 
 ### **TL;DR** - Summary
 
-The two structural code differences to writing tests in *JavaScript* are:
+The two *structural* code differences to writing tests in *JavaScript* are:
 1. The **OPA Pages are simply classes extending `Opa5`, having the actions and assertions as class methods**.
 2. The **OPA Journeys do not use the `Given`/`When`/`Then` objects, but call actions and assertions directly on the Page objects**. 
 
 This simplifies the test code a lot and at the same time avoids type complications in TypeScript caused by OPA APIs not fitting a typed language. 
 All other testing code is converted from JavaScript in the same way as regular application code is (i.e. using real ECMAScript classes and modules).
 
-Also, the configuration to instrument code for coverage reporting is different from the JavaScript setup. The `istanbul` library needs to be added to the Babel config of `ui5-tooling-transpile-middleware` in `ui5.yaml`.
+The one *setup* difference is in the configuration to instrument code for coverage reporting: the `istanbul` library needs to be added to the Babel config of `ui5-tooling-transpile-middleware` in `ui5.yaml`.
+
+Details can be found below.
 
 ### NOTE
 
@@ -26,6 +28,7 @@ Once the project is set up (`git clone` and `npm install`, see further down), th
 1. *Manual execution*: use `npm start` and then execute the tests by opening the [testsuite](http://localhost:8080/test/testsuite.qunit.html) ([http://localhost:8080/test/testsuite.qunit.html](http://localhost:8080/test/testsuite.qunit.html)) in your browser. You can also directly launch the [QUnit tests](http://localhost:8080/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=unit/unitTests) or the [Integration tests](http://localhost:8080/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=integration/opaTests) individually.
 <!-- 2. *Test-driven* development by running Karma in watch mode using `npm run karma` (which triggers the test each time a source file changes) -->
 2. *Headless testing*: launch test-runner either *without* coverage reporting using `npm run test-runner` or *with* coverage using `npm run test-runner-coverage`.
+While the tests are running, their status can be observed at http://localhost:8081/_/progress.html
 
 ## Writing Unit Tests (QUnit)
 
@@ -72,54 +75,7 @@ This is where the biggest changes are done compared to non-TypeScript OPA tests:
 Apart from this, the implementation of the actions and assertions is done just like in JavaScript.
 
 
-## Code Coverage Reporting in TypeScript
 
-The difference to JavaScript in the overall project testing setup is that the code instrumentation for coverage reporting does not work with `@ui5/middleware-code-coverage`. Instead, the Babel plugin `istanbul` needs to be set up in the Babel configuration of the `ui5-tooling-transpile` middleware. This is also documented by the [`ui5-test-runner`](https://github.com/ArnaudBuchholz/ui5-test-runner/blob/main/docs/coverage.md#typescript-ui5cli-projects).
-
-
-### 1. Configuration in `ui5-coverage.yaml`
-
-Code instrumentation is not always needed, only for coverage tests. Hence, create an additional configuration file `ui5-coverage.yaml` as copy of `ui5.yaml` with the `ui5-tooling-transpile-middleware` section extended like this. The respective npm script in `package.json` will then reference this file.
-
-```yaml
-    - name: ui5-tooling-transpile-middleware
-      afterMiddleware: compression
-      configuration:
-        debug: true
-        babelConfig:
-          sourceMaps: true
-          ignore:
-          - "**/*.d.ts"
-          presets:
-          - - "@babel/preset-env"
-            - targets: defaults
-          - - transform-ui5
-          - "@babel/preset-typescript"
-          plugins:
-          - istanbul
-```
-
-### 2. Add `babel-plugin-istanbul` Dependency
-
-Add the `babel-plugin-istanbul` referenced in the last line above to the project's dev dependencies:
-
-```sh
-npm i --save-dev babel-plugin-istanbul
-```
-
-### 3. Use `.nycrc.json` to Exclude Test Files from Coverage
-
-To exclude the test files from coverage reporting, create a `.nycrc.json` file with the following content:
-
-```json
-{
-    "all": true,
-    "sourceMap": false,
-    "exclude": [
-        "**/test/**/*.ts"
-    ]
-}
-```
 
 ## Setting up this Project
 

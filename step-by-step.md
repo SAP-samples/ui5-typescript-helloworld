@@ -1,10 +1,10 @@
-# A Detailed Guide to Create a UI5 TypeScript App From Scratch in Five to Ten Steps
+# A Detailed Guide to Create a UI5 TypeScript App From Scratch in Five to Seventeen Steps
 
 This guide explains step-by-step and command-by-command how you get to a complete UI5 TypeScript setup from scratch.
 
-While you can get started faster by just copying and modifying the entire *Hello World* app, this step-by-step guide will help you understand every bit and piece of the setup and how the pieces fit together.
+While you can get started faster by using the [Easy-UI5 "ts-app" template](https://github.com/ui5-community/generator-ui5-ts-app) or just copying and modifying the entire Hello World app, this step-by-step guide will help you *understand* every bit and piece of the setup and how the pieces fit together.
 
-It consists of ten steps, but in fact only the first half is really related to TypeScript. The remaining five steps are about adding the UI5 tools to the project and wrapping everything up nicely, so these steps apply more or less to any UI5 application project.
+It consists of 17 steps, but in fact only steps 2, 3, 4 and 6 are really related to the basic TypeScript setup. The remaining steps are about adding the UI5 tools to the project, about testing and about wrapping everything up nicely, so these steps apply more or less to any UI5 application project.
 
 ## Table of Contents
 
@@ -18,12 +18,12 @@ It consists of ten steps, but in fact only the first half is really related to T
 1. [Set Up Live Reload for Easier Development (Optional)](#8-set-up-live-reload-for-easier-development-optional)
 1. [Add an Optimized UI5 Build (Optional)](#9-add-an-optimized-ui5-build-optional)
 1. [Add Scripts for Building/Running/Checking to `package.json`](#10-add-scripts-for-buildingrunningchecking-to-packagejson)
-1. [Add the Test Code (Bonus)](#11-add-the-test-code-bonus)
-1. [Enable TypeScript support for the Test Code (Bonus)](#12-enable-typescript-support-for-the-test-code-bonus)
-1. [Automated QUnit/OPA Testing using Karma (Bonus)](#13-automated-qunitopa-testing-using-karma-bonus)
-1. [Add Scripts for Testing to `package.json` (Bonus)](#14-add-scripts-for-testing-to-packagejson-bonus)
-1. [Enable Code Coverage (Extra-Bonus)](#15-enable-code-coverage-extra-bonus)
-1. [Add Scripts for Coverage Testing to `package.json` (Extra-Bonus)](#16-add-scripts-for-coverage-testing-to-packagejson-extra-bonus)
+1. [Add the Test Code](#11-add-the-test-code)
+1. [Enable TypeScript support for the Test Code](#12-enable-typescript-support-for-the-test-code)
+1. [Automated QUnit/OPA Testing using `ui5-test-runner`](#13-automated-qunitopa-testing-using-ui5-test-runner)
+1. [Enable Code Coverage](#14-enable-code-coverage)
+1. [Add Scripts for Testing to `package.json`](#15-add-scripts-for-testing-to-packagejson)
+1. [Add Scripts for Coverage Testing to `package.json`](#16-add-scripts-for-coverage-testing-to-packagejson)
 1. [One More Thing: Housekeeping](#17-one-more-thing-housekeeping)
 
 ## 1. Initialize an Empty Project
@@ -51,7 +51,7 @@ Inside your project, create a `webapp` folder:
 mkdir webapp
 ```
 
-Inside this folder, create a file with TypeScript code. In order to test the use of UI5 types and the code transformation, name it `Component.ts` (note: the file ending is `.ts`, not `.js`!) and add the following code inside. Of course, this is so far just a dummy component and not yet a complete app:
+Inside this folder (`cd webapp`), create a file with TypeScript code. In order to test the use of UI5 types and the code transformation, name it `Component.ts` (note: the file ending is `.ts`, not `.js`!) and add the following code inside. Of course, this is so far just a dummy component and not yet a complete app:
 
 ```ts
 import UIComponent from "sap/ui/core/UIComponent";
@@ -69,30 +69,25 @@ export default class Component extends UIComponent {
 
 Note that the scope of this tutorial is the TypeScript setup of a project, not the application code itself. Hence the content of the *.ts files will not be explained further. It is plain regular UI5 application code, with two exceptions:
 
-  1. It is **TypeScript** code, which means while mostly being plain JavaScript, it also contains type declarations for variables, parameters and function return values, as seen in the definition of the "multiply" method. You will be able to see how these will be stripped away by the TypeScript compilation.
+  1. It is **TypeScript** code, which means while mostly being plain JavaScript, it also contains type declarations for variables, parameters and function return values, as seen in the definition of the "multiply" method. In a moment, you will be able to see how these will be stripped away by the TypeScript compilation.
 
-  1. It is **modern JavaScript** code with [modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) and [classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes), which will be transformed to classic UI5 code in a further step of the build process. This is not really related to TypeScript, but it's the way how we recommend to write modern UI5 apps when a build step is anyway needed.
+  1. It is **modern JavaScript (/TypeScript)** code with [modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) and [classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes), which will be transformed to classic UI5 code (with `sap.ui.require(...)` and `BaseClass.extend(...)`) in a further step of the build process. This is not really related to TypeScript, but it's the way how we recommend to write modern UI5 apps when a build step is anyway needed.
 
 ## 3. Set Up the TypeScript Compilation
 
-Now, let's get the TypeScript compiler and the UI5 type definitions:
+Now, let's get the TypeScript compiler and the UI5 type definitions as dev dependencies:
 
 ```sh
-npm install --save-dev typescript @types/openui5@1.112.0
+npm install --save-dev typescript @types/openui5
 ```
 
-When you are developing a SAPUI5 application (i.e. also using control libraries which are not available in OpenUI5), use the `@sapui5/ts-types-esm` types instead of the `@types/openui5` ones.
+When you are developing a SAPUI5 application (i.e. also using control libraries which are not available in OpenUI5), use the `@sapui5/types` types instead of the `@types/openui5` ones.
 
-> **Remark:** There are also `@openui5/ts-types-esm` types available - how do they differ from the `@types/openui5` ones?<br>
-The one difference is in versioning: while the types in the `@openui5` namespace are exactly in sync with the respective OpenUI5 patch release, the ones in the `@types` namespace follow the DefinitelyTyped versioning and are only released *once* per minor release of OpenUI5 ([more details here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#versioning)), not for every patch. In practice it shouldn't make any difference what you use, but note that in the `@types` namespace there is usually only the `*.*.0` patch release available.<br>
-The other small difference is [described in detail here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#jquery-and-qunit-references-and-their-versions). In essence, UI5 declares the jQuery and QUnit types as dependencies to make sure the type definitions are also loaded because types from those libraries are in some places exposed in UI5 APIs. The difference is that for `@types/openui5` the *latest* version of those types is referenced and for `@openui5/ts-types-esm` the *best matching* version is referenced. But in practice also this difference should not be something to worry about. To enforce using a specific version of the jQuery/QUnit types with the `@types/openui5` type definitions, you can always do e.g.:
-> ```sh
-> npm install --save-dev @types/jquery@3.5.9 @types/qunit@2.5.4
-> ```
->
+> **Remark:** There are also `@openui5/types` types available - how do they differ from the `@types/openui5` ones?<br>
+The content is basically the same, one difference is in versioning: while the types in the `@openui5` namespace are exactly in sync with the respective OpenUI5 patch release, the ones in the `@types` namespace follow the [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) versioning and are only released *once* per minor release of OpenUI5 ([more details here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#versioning)), not for every patch. In practice it shouldn't make a noticeable difference what you use, but note that in the `@types` namespace there is usually only the `*.*.0` patch release available.<br>
 > The SAPUI5 types are not available in the `@types` namespace.
 
-Now execute
+To trigger the first TypeScript transpilation in this project, now execute
 
 ```sh
 npx tsc webapp/Component.ts
@@ -102,14 +97,15 @@ npx tsc webapp/Component.ts
 
 The TypeScript compiler tries to compile the component file, but it complains because it finds some unknown JavaScript classes (`Iterator`, `Generator`) in the UI5 type definitions. This is because TypeScript by default works with a pretty old language level of JavaScript (ES3) and we need to tell it to accept a newer language level (ES2022).
 
-Actually, there is some Component.**js** file created inside the `webapp` folder, but the content is really weird and bloated. **Please delete this file to avoid downstream issues!**
+Actually, there is some Component.**js** file created inside the `webapp` folder, but the content is really weird and bloated because the transpiler tried to re-build some newer JavaScript features with extra code.<br>
+**Please delete this file to avoid downstream issues!**
 
-So we need to add a `tsconfig.json` configuration file to configure the right language level. Add a file with this name and the following content to the root of the project:
+To configure the transpiler properly, we need to add a `tsconfig.json` configuration file. Add a file with this name and the following content to the *root* of the project, *outside* the `webapp` folder:
 
 ```json
 {
     "compilerOptions": {
-        "target": "es2022",
+        "target": "es2023",
         "module": "es2022",
         "moduleResolution": "node",
         "skipLibCheck": true,
@@ -117,30 +113,26 @@ So we need to add a `tsconfig.json` configuration file to configure the right la
         "strict": true,
         "strictPropertyInitialization": false,
         "rootDir": "./webapp",
-        "baseUrl": "./",
         "paths": {
             "ui5/typescript/helloworld/*": ["./webapp/*"]
-        },
-        "composite": true
+        }
     },
     "include": ["./webapp/**/*"]
 }
 ```
 
-> **Note:** when you use the `@sapui5/ts-types-esm` (or `@openui5/ts-types-esm`) types instead, you need to add the following section to tsconfig.json:
+> **Note:** when you use the `@sapui5/types` or `@openui5/types` types instead, you need to add the following section to tsconfig.json:
 >
 > ```json
->        "typeRoots": [
->            "./node_modules/@types"
->        ],
 >        "types": [
->            "@sapui5/ts-types-esm"
+>            "@sapui5/types"
 >        ],
 >```
+> (or `@openui5/types`, respectively)
 >
-> Why? TypeScript automatically finds all type definition files in a dependency starting with `@types/...` (i.e. all `.d.ts` files in `node_modules/@types/...`). The jQuery d.ts files are there and found, but the SAPUI5 types are only available in a package starting with `@sapui5/...`, hence TypeScript must be explicitly pointed to these types. As this disables the automatic loading of other types from `node_modules/@types/...`, this path must be given as a type root.
+> Why? TypeScript automatically finds all type definition files in a dependency starting with `@types/...` (i.e. all `.d.ts` files in `node_modules/@types/...`). The SAPUI5 types are only available in a package starting with `@sapui5/...`, hence TypeScript must be explicitly pointed to these types. Note that this disables the automatic loading of other types from `node_modules/@types/...`, so any additional types also need to be added to this list.
 
-There are additional settings in this file, e.g. telling the compiler which files to compile (all matching `./webapp/**/*`) and how the modules should be resolved (`"moduleResolution": "node"`). And a couple of compiler options which are not so important right now. They determine how exactly the compiler behaves. The "paths" section informs TypeScript about the mapping of namespaces used in the app.
+There are additional settings in this file, e.g. telling the compiler which files to compile (all matching `./webapp/**/*`) and how the modules should be resolved (`"moduleResolution": "node"`). And a couple of compiler options which are not so important right now. They determine how exactly the compiler should behave. The "paths" section informs TypeScript about the mapping of namespaces used in the app.
 
 Now you can do the following **in the root directory** of your project. TypeScript will pick up all the settings and as result you will find a compiled JavaScript file in the automatically created `dist` folder:
 
@@ -155,6 +147,8 @@ multiply(x, y) {
     return x * y;
 }
 ```
+
+Again, remember to delete the previously generated `webapp/Component.js` file if you tried transpiling before creating the `tsconfig.json` file.
 
 In case there is a type error, the compilation will let you know. E.g. when you change the return type of the `multiply` function to `string` in `Component.ts`, then there will be an error:
 
@@ -175,40 +169,47 @@ You can also invoke this check without creating the compiled output files when y
 npx tsc -noEmit
 ```
 
-### 4. Set Up a Lint Check
+Note that the transpilation result still contains ES modules and classes, not the UI5-specific module loading and class definition. This will be taken care of later.
 
-While not strictly required, it makes sense to have your code checked with a linter. The popular [ESLint](https://eslint.org/) tool also understands TypeScript when some plug-ins are added. It is the recommended tool to lint TypeScript code. So let's add ESLint and these plug-ins as dev dependencies!
+## 4. Set Up a Lint Check
+
+While not required, it makes sense to have your code checked with a linter. The popular [ESLint](https://eslint.org/) tool also understands TypeScript when some plug-ins are added. It is the recommended tool to lint TypeScript code. So let's add ESLint and these plug-ins as dev dependencies!
 
 ```sh
-npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
+npm install --save-dev eslint typescript-eslint
 ```
 
-ESLint needs to be told which plug-ins to use and which JavaScript language level the code should have, so create a `.eslintrc.json` file in the project root with these settings:
+ESLint needs to be told which plug-ins to use and which JavaScript language level the code should have, so create a `eslint.config.mjs` file in the project root with these settings:
 
-```json
-{
-    "env": {
-        "browser": true,
-        "es6": true,
-        "node": true
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "project": ["./tsconfig.json"],
-        "sourceType": "module"
-    },
-    "plugins": [
-        "@typescript-eslint"
-    ]
-}
+```js
+import eslint from "@eslint/js";
+import globals from "globals";
+import tseslint from "typescript-eslint";
+
+export default tseslint.config(
+	eslint.configs.recommended,
+	...tseslint.configs.recommended,
+	...tseslint.configs.recommendedTypeChecked,
+	{
+		languageOptions: {
+			globals: {
+				...globals.browser,
+				sap: "readonly"
+			},
+			ecmaVersion: 2023,
+			parserOptions: {
+				project: true,
+				tsconfigRootDir: import.meta.dirname
+			}
+		}
+	},
+	{
+		ignores: ["eslint.config.mjs"]
+	}
+);
 ```
 
-After adding the configuration you can now execute ESLint with the following command:
+After adding the configuration, you can now execute ESLint with the following command:
 
 ```sh
 npx eslint webapp
@@ -218,13 +219,13 @@ Your TypeScript code can now be checked for syntax and style problems.
 
 There should not be any output (this means: no error), but if you introduce a syntax error to Component.ts, the check will complain with an error and if e.g. the return type of the `multiply` function is missing, it will show a warning.
 
-If you get an error straight away which says something like "The file does not match your project config: src\Component.**js**.", then this might be a left-over compilation result from step 3 above. Delete it and re-try.
+If you get an error straight away which says something about the file "webapp\Component.**js**", then this might be a left-over compilation result from step 3 above. Delete this file and re-try.
 
-In the configuration file all kinds of details regarding the single ESLint rules can be configured. But for this guide (and because the UI5 team does not currently give a set of actual recommendations) let's stick with the recommended TypeScript defaults, which are referenced in the `extends` section.
+In the configuration file all kinds of details regarding the ESLint rules can be configured. But for this guide (and because the UI5 team does not currently give a set of actual recommendations) let's stick with the recommended TypeScript defaults, which the above configuration extends.
 
-### 5. Set Up the UI5 CLI Tooling
+## 5. Set Up the UI5 CLI Tooling
 
-To benefit from an improved development experience and the possibility to build and optimize your application before productive use, it is recommended to use the [UI5 CLI Tooling](https://sap.github.io/ui5-tooling/pages/CLI/). You can benefit from an ecosystem of tooling extensions (i.e., livereload, proxies, ...) to simplify your developers life.
+To benefit from an improved development experience and the possibility to build and optimize your application before productive use, it is recommended to use the [UI5 CLI Tooling](https://sap.github.io/ui5-tooling/pages/CLI/). You can benefit from an ecosystem of tooling extensions (i.e., livereload, proxies, ...) to simplify your development.
 
 You can install the UI5 CLI Tooling with the following command:
 
@@ -232,7 +233,7 @@ You can install the UI5 CLI Tooling with the following command:
 npm install --save-dev @ui5/cli
 ```
 
-Afterwards you can use the UI5 Tooling to initialize the project and create the UI5 Tooling specific configuration file - the `ui5.yaml`. To do so, just execute the following command:
+Afterwards, you can use the UI5 Tooling to initialize the project and create the UI5 Tooling specific configuration file - the `ui5.yaml`. To do so, just execute the following command:
 
 ```sh
 npx ui5 init
@@ -241,22 +242,22 @@ npx ui5 init
 By default the configuration file includes just the following basic metadata (the `specVersion` of the `ui5.yaml` file, the project `name` and the project `type`):
 
 ```yaml
-specVersion: '2.6'
+specVersion: "4.0"
 metadata:
   name: ui5-typescript-from-scratch
 type: application
 ```
 
-For running UI5 applications with the UI5 Tooling we also need some additional `framework` information like framework `name` and `version`) and the required libraries and theme libraries. Now put the following content in your `ui5.yaml` (please adopt the `metadata > name` to `ui5.typescript.helloworld`):
+For running UI5 applications with the UI5 Tooling we also need some additional `framework` information (like framework `name` and `version`) and the required libraries and theme libraries. Now put the following content in your `ui5.yaml` (please change the generated `metadata > name` to `ui5.typescript.helloworld` and use a current OpenUI5 version):
 
 ```yaml
-specVersion: "3.0"
+specVersion: "4.0"
 metadata:
   name: ui5.typescript.helloworld
 type: application
 framework:
   name: OpenUI5
-  version: "1.112.0"
+  version: "1.131.1"
   libraries:
     - name: sap.m
     - name: sap.ui.core
@@ -266,18 +267,19 @@ framework:
 
 As seen in the initial content of the `ui5.yaml` after running `ui5 init` only the first four lines are strictly required to use the UI5 Tooling, the rest is still useful: the `framework` section downloads the UI5 framework along with needed libraries and provides it at the virtual path `/resources` when `ui5 serve` is called. This path is from where the index.html file loads UI5. More information about the UI5 Tooling can be found here: [https://sap.github.io/ui5-tooling](https://sap.github.io/ui5-tooling).
 
-The UI5 Tooling commands require at least a `manifest.json` (an [Application Descriptor](https://sapui5.hana.ondemand.com/sdk/#/topic/be0cf40f61184b358b5faedaec98b2da.html)) in the `webapp` folder. A very simple and lightweight `manifest.json` providing the `id`, `type`, and `version` of your application:
+The UI5 Tooling commands require at least a `manifest.json` (an [Application Descriptor](https://sapui5.hana.ondemand.com/sdk/#/topic/be0cf40f61184b358b5faedaec98b2da.html)) in the `webapp` folder. A very simple and lightweight `manifest.json` providing the `id`, `type`, `title` and `version` of your application:
 
 ```json
 {
-  "_version": "1.52.0",
-  "sap.app": {
-    "id": "ui5.typescript.helloworld",
-    "type": "application",
-    "applicationVersion": {
-      "version": "1.0.0"
+    "_version": "1.52.0",
+    "sap.app": {
+        "id": "ui5.typescript.helloworld",
+        "type": "application",
+        "title": "UI5 TypeScript Hello World",
+        "applicationVersion": {
+          "version": "1.0.0"
+        }
     }
-  }
 }
 ```
 
@@ -316,7 +318,7 @@ What you can do now: create a simple `test.html` file in the `webapp` folder and
 </html>
 ```
 
-After you can start the `test.html` running inside the development server of the UI5 CLI Tooling:
+After creating this file you can start the `test.html` running inside the development server of the UI5 CLI Tooling (but note that this is just to test the UI5 tooling setup and not related to TypeScript!):
 
 ```sh
 npx ui5 serve -o test.html
@@ -326,7 +328,7 @@ That's it! A web server with the test page is started and it is automatically op
 
 ## 6. Using a UI5 Tooling Extension for Code Transformation
 
-The code transpiled by `tsc` still uses ES modules and classes which need to be transformed to classic UI5 code. To do so, we need another build step and server middleware, using the [`ui5-tooling-transpile`](https://www.npmjs.com/package/ui5-tooling-transpile) tooling extensions. It uses the [Babel](https://babeljs.io/) transpiler behind the scenes. The TypeScript compiler will no longer be called directly from now on. The UI5 Tooling now integraties the code transformation into its build lifecycle.
+The code transpiled by `tsc` still uses ES modules and classes which need to be transformed to classic UI5 code. To do so, we need to do the transpilation in a different way, using the [`ui5-tooling-transpile`](https://www.npmjs.com/package/ui5-tooling-transpile) tooling extension. It uses the [Babel](https://babeljs.io/) transpiler behind the scenes. The TypeScript compiler will no longer be called directly from now on. Instead, the UI5 Tooling now integraties the transpilation *and* the code transformation into its build lifecycle as Babel plugins.
 
 Add the dependency to `ui5-tooling-transpile` to your project first:
 
@@ -334,7 +336,7 @@ Add the dependency to `ui5-tooling-transpile` to your project first:
 npm install --save-dev ui5-tooling-transpile
 ```
 
-Then add the following configuration at the end of your `ui5.yaml`:
+Then add the following configuration at the end of your `ui5.yaml`. Make sure the indentation levels are correct, with "builder" and "server" on the same level as "framework":
 
 ```yaml
 builder:
@@ -347,45 +349,40 @@ server:
       afterMiddleware: compression
 ```
 
-The `ui5-tooling-transpile` tooling extension is by default configuration free. It derives the programming language being TypeScript of JavaScript by the existence of the `tsconfig.json` file in the project root.
+The `ui5-tooling-transpile` tooling extension is by default configuration free. It derives the programming language being TypeScript or JavaScript by the existence of the `tsconfig.json` file in the project root.
 
-Now you can run the build with the following command:
+> By default the `ui5-tooling-transpile` uses a default Babel configuration. As an *optional* step - when you need to customize the code transformation of Babel - you can create a [Babel configuration](https://babeljs.io/docs/configuration) file (i.e. `.babelrc.json`) in the root of the project, with the following content:
+>
+> ```json
+>  {
+>    "ignore": [
+>      "**/*.d.ts"
+>    ],
+>    "presets": [
+>      ["@babel/preset-env", {     // applied 3rd
+>        "targets": "defaults"
+>      }],
+>      "transform-ui5",            // applied 2nd
+>      "@babel/preset-typescript"  // applied 1st
+>    ],
+>    "sourceMaps": true
+>  }
+> ```
+> 
+> The default configuration used internally by the tooling extension is similar to this. If you decide for a custom Babel configuration we recommend for the `@babel/preset-env` to use the targets [`defaults`](https://browsersl.ist/#q=defaults).
 
-```sh
-npx ui5 build --clean-dest
-```
-
-By default the `ui5-tooling-transpile` uses a default Babel configuration (which is created internally when running the task or the middleware). As an *optional* step - when you need to customize the code transformation of Babel - you can create a [Babel configuration](https://babeljs.io/docs/configuration) file (i.e. `.babelrc.json`) in the root of the project, with the following content:
-
-```json
-{
-  "ignore": [
-    "**/*.d.ts"
-  ],
-  "presets": [
-    ["@babel/preset-env", {     // applied 3rd
-      "targets": "defaults"
-    }],
-    "transform-ui5",            // applied 2nd
-    "@babel/preset-typescript"  // applied 1st
-  ],
-  "sourceMaps": true
-}
-```
-
-The default configuration used internally by the tooling extension is similar like the configuration above. If you decide for a custom Babel configuration we recommend for the `@babel/preset-env` to use the targets [`defaults`](https://browsersl.ist/#q=defaults).
-
-Now you are ready to transform your TypeScript code into JavaScript code. Just execute the build with the UI5 Tooling with the following command:
+Now you are ready to transform your TypeScript code into proper UI5 JavaScript code. Just execute the build with the UI5 Tooling with the following command:
 
 ```sh
 npx ui5 build --clean-dest
 ```
 
-The result is a `dist` folder with a `Component.js` file which is converted from TypeScript AND also converted to classic UI5 code!
+The result is a `dist` folder with (among others) a `Component-dbg.js` file which is converted from TypeScript AND also converted to classic UI5 code!
 
 Open this file to see: the module imports are replaced with the classic `sap.ui.define(...)` and the `Component` class is now defined by calling `UIComponent.extend(...)`:
 
 ```js
+...
 sap.ui.define(["sap/ui/core/UIComponent"], function (UIComponent) {
   ...
   const Component = UIComponent.extend("ui5.typescript.helloworld.Component", {
@@ -393,15 +390,15 @@ sap.ui.define(["sap/ui/core/UIComponent"], function (UIComponent) {
 
 This means the complete TypeScript build setup is now done!
 
-### 7. Complete the App Code
+## 7. Complete the App Code
 
 To extend the now-complete TypeScript setup into a complete app development setup in the rest of this tutorial, we need a complete and runnable app.
 
-Please copy the entire content of this repository's [webapp](webapp) directory (you can [download the entire repository from here as zip file](../../archive/refs/heads/main.zip)) into your local project's `webapp` directory. Make sure to also replace the dummy `Component.ts` file we have used so far and delete the `webapp/test` folder for the time being!
+Please copy the entire content of this repository's [webapp](webapp) directory (you can [download the entire repository from here as zip file](../../archive/refs/heads/main.zip)) into your local project's `webapp` directory. Make sure to also replace the dummy `Component.ts` file we have used so far and delete the `webapp/test` folder for the time being! The tests will be explained further down.
 
 Alternatively, you could of course also develop your own UI5 app in TypeScript within the `webapp` folder.
 
-### 8. Set Up Live Reload for Easier Development (Optional)
+## 8. Set Up Live Reload for Easier Development (Optional)
 
 Making the browser reload the app automatically when you modify the sources you only need to add the [`livereload`](https://www.npmjs.com/package/ui5-middleware-livereload) middleware. This middleware checks for any changes in the `webapp` folder and causes the browser to reload when such a change is detected.
 
@@ -411,17 +408,14 @@ The `livereload` middleware is added as follows. First, add it as another depend
 npm install --save-dev ui5-middleware-livereload
 ```
 
-Second, register the middleware at the end of the `server > customMiddleware` section in your `ui5.yaml` file. The `livreload` middleware is configuration free, you just need to register it:
+Second, register the middleware at the end of the `server > customMiddleware` section in your `ui5.yaml` file. The `livreload` middleware is configuration-free, you just need to register it:
 
 ```yaml
-server:
-  customMiddleware:
-  [...]
     - name: ui5-middleware-livereload
       afterMiddleware: compression
 ```
 
-Make sure to get the indentation right (first line is not indented) because it is significant in yaml files.
+Make sure to get the indentation right (like the ui5-tooling-transpile-middleware lines) because it is significant in yaml files.
 
 As result, you can now run the development server with the following command:
 
@@ -431,7 +425,7 @@ npx ui5 serve -o index.html
 
 The app in the automatically opened browser window reloads whenever a source file in `webapp` folder was changed and saved.
 
-### 9. Add an Optimized UI5 Build (Optional)
+## 9. Add an Optimized UI5 Build (Optional)
 
 This step is again not at all related to TypeScript, but as the UI5 Tooling are already set up, you can as well use them for building an optimized **self-contained** app: it picks only the needed UI5 framework modules and controls and bundles them with all application resources into one single file.
 
@@ -439,20 +433,20 @@ This step is again not at all related to TypeScript, but as the UI5 Tooling are 
 npx ui5 build self-contained --clean-dest --all
 ```
 
-The `self-contained` command takes care of bundling all resources into one single file. This means: app code AND UI5 code. The `--all` switch takes care of building and copying all UI5 framework resources to the `dist` folder as well. The JavaScript resources should not be needed there (because all needed ones should already be in the bundle). But library CSS files etc. are not in the bundle, they are just put aside.
+The `self-contained` command takes care of bundling all resources into one single file. This means: app code AND UI5 code! The `--all` switch takes care of building and copying all UI5 framework resources to the `dist` folder as well. The JavaScript resources should not be needed there (because all needed ones should already be in the bundle). But library CSS files etc. are not in the bundle, they are just put aside.
 
-This takes a while, maybe a minute or two, as it also needs to process all UI5 resources. But this is anyway a step which is usually only done once before releasing the app, not for every development roundtrip.
+This takes a while, maybe a minute or two, as it also needs to process all UI5 resources and creates not only the optimized bundle, but also all the other UI5 resources. But this is anyway a step which is usually only done once before releasing the app, not for every development roundtrip.
 
-Alternatively, if you don't need the fully optimized one-file bundle and want to load UI5 from elsewhere, you can also just do a regular build:
+Alternatively, if you don't need the fully optimized one-file bundle and want to load UI5 from CDN or elsewhere, you can also just do a regular build:
 
 ```sh
 npx ui5 build --clean-dest
 ```
 
-Either way, the result in `dist` can either be put on a static web server or it can be served with the UI5 Tooling. To simulate the latter, a slightly different UI5 tools configuration is needed because it now needs to serve from the `dist` folder. This configuration goes into a new file named `ui5-dist.yaml` in the project root:
+Either way, the result in `dist` can either be put on a static web server or it can be served with the UI5 Tooling. To set up the latter, a slightly different UI5 tools configuration is needed because it now needs to serve from the `dist` folder. This configuration goes into a new file named `ui5-dist.yaml` in the project root:
 
 ```yaml
-specVersion: "3.0"
+specVersion: "4.0"
 metadata:
   name: ui5.typescript.helloworld
 type: application
@@ -462,15 +456,15 @@ resources:
       webapp: dist
 framework:
   name: OpenUI5
-  version: "1.112.0"
+  version: "1.131.1"
   libraries:
     - name: sap.m
     - name: sap.ui.core
     - name: sap.ui.unified
-    - name: themelib_sap_fiori_3
+    - name: themelib_sap_horizon
 ```
 
-One difference to the other yaml file is the removed the `builder` and the `middleware` configuration sections as they are not needed anymore and the other one is the addition of the `resources` section which tells the UI5 Tooling to serve from the `dist` directory.
+One difference to the other yaml file is the removed the `builder` and `middleware` configuration sections, as they are not needed anymore in a productive build, and the other one is the addition of the `resources` section which tells the UI5 Tooling to serve from the `dist` directory.
 
 To run the build result from `dist`, `ui5 serve` can then be executed as before, but additionally using this new configuration file:
 
@@ -478,9 +472,9 @@ To run the build result from `dist`, `ui5 serve` can then be executed as before,
 npx ui5 serve -o index.html --config ui5-dist.yaml
 ```
 
-### 10. Add Scripts for Building/Running/Checking to `package.json`
+## 10. Add Scripts for Building/Running/Checking to `package.json`
 
-Now it's time to write down the various commands used so far as scripts in `package.json`, so you don't need to type them every time they are used.
+Now it's time to write down the various commands used so far as scripts in `package.json`, so you don't need to recall and type them every time they are used.
 
 Change the `"scripts"` section in the `package.json` file to have the following content. All scripts have already been used and explained earlier, so there is nothing new here, it's just for convenience.
 
@@ -495,57 +489,44 @@ Change the `"scripts"` section in the `package.json` file to have the following 
 }
 ```
 
-Calling `npx` is not needed here, as the commands are automatically found within the "node_modules" folder when run as npm script.
+Calling `npx` is not needed here, as the commands are automatically found within the `node_modules` folder when run as npm script.
 
-Do you still want more? Yes, then let's take a look into testing...
+An important topic has been skipped so far - let's take a look into testing!
 
-### 11. Add the Test Code (Bonus)
+## 11. The Test Code - Overview
 
-The location for the QUnit tests for UI5 applications is the `webapp/test` folder. In the step [Complete the App Code](#7-complete-the-app-code), we asked you to delete this folder for the time being. Now is the time to add it back to your application. This will add the following resources:
+The location for the QUnit tests for UI5 applications is the `webapp/test` folder. So far we have ignored its content. Now let's step through all parts of it. This is the overall structure.
+
+It is [exactly the same structure and files as for JavaScript projects](https://github.com/ui5-community/generator-ui5-app/tree/main/generators/app/templates/webapp/test), so this page does not go into all the details, but focuses on the TypeScript-specific parts.
 
 ```text
 webapp/test
-├── integration               // the OPA tests
+├── integration               // the OPA integration tests
 |   ├── pages                 //  - test pages
-|   |   ├── AllPages.ts
-|   |   └── App.ts
+|   |   └── AppPage.ts
 |   ├── HelloJourney.ts       //  - journey
-|   ├── opaTests.qunit.html   // the OPA testsuite html page
-|   └── opaTests.qunit.ts     // the OPA testsuite
-├── unit
-|   ├── controller            // user defined QUnit tests folder
-|   |   └── App.qunit.ts      // QUnit test for the controller
-|   ├── unitTests.qunit.html  // the QUnit testsuite html page
-|   └── unitTests.qunit.ts    // the QUnit testsuite
-├── testsuite.qunit.html      // the general testsuite html page
-└── testsuite.qunit.js        // the general testsuite
+|   └── opaTests.qunit.ts     //  - the testsuite
+├── unit                      // the unit tests
+|   ├── controller            //  - user-defined QUnit tests folder
+|   |   └── App.qunit.ts      //  - QUnit test for the controller
+|   └── unitTests.qunit.ts    //  - the testsuite
+├── Test.qunit.html           // the page inside which the tests are run
+├── testsuite.qunit.ts        // the general testsuite setup
+└── testsuite.qunit.html      // the general testsuite html page
 ```
 
-Additional QUnit test pages need to be registered in the `unitTests.qunit.ts`:
+Starting from the root level at the bottom of the above tree:
+- `testsuit.qunit.html` is the main entry point and makes the UI5 test starter build the overall testsuite according to the configuration in `testsuite.qunit.ts`.
+- `testsuite.qunit.ts` is the overall test configuration as defined and required by the [UI5 test starter](https://ui5.sap.com/sdk/#/topic/22f50c0f0b104bf3ba84620880793d3f).
+- `Test.qunit.html` is the generic test page in which the tests are run. It will be called with the test suite and test name in order to run a test.
+- `unitTests.qunit.ts` is where all QUnit test pages are registered by simply importing their modules: `import "unit/controller/App.qunit";`
+- `App.qunit.ts` is an example of a very basic unit test written in TypeScript.
+- `opaTests.qunit.ts` is like for the unit tests the central place where you register your journeys by importing them: `import "integration/HelloJourney";`.
+- `HelloJourney.ts` and `AppPage.ts` are the well-known journeys and pages for OPA tests, but they come with a twist in TypeScript, or rather: a simplification. See the main README.md file for details.
 
-```ts
-void Promise.all([
-  import("unit/controller/App.qunit"),
-  // additional QUnit tests go here
-]).finally(() => {
-  QUnit.start();
-});
-```
+## 12. Enable TypeScript support for the Test Code
 
-For OPA journeys it is similar: here you need to register your additional journeys in the `opaTests.qunit.ts`:
-
-```ts
-void Promise.all([
-  import("integration/HelloJourney"),
-  // additional journeys go here
-]).finally(() => {
-  QUnit.start();
-});
-```
-
-### 12. Enable TypeScript support for the Test Code (Bonus)
-
-To make TypeScript aware about the additional module paths for the `unit` and the `integration` test code, we need to extend the `paths` information of the `tsconfig.json` with the following entries:
+To make TypeScript aware of the additional module paths for the `unit` and the `integration` test code, we need to extend the `paths` information of the `tsconfig.json` with the following entries:
 
 ```json
         "paths": {
@@ -557,152 +538,123 @@ To make TypeScript aware about the additional module paths for the `unit` and th
 
 Now you should be able to get proper code completion support for your QUnit and OPA tests.
 
-### 13. Automated QUnit/OPA Testing using Karma (Bonus)
+## 13. Automated QUnit/OPA Testing using ui5-test-runner
 
-To automate the execution of the QUnit/OPA tests, we are using [Karma](https://karma-runner.github.io/). To add the required dependencies you need to run the following command:
-
-```sh
-npm install --save-dev karma karma-chrome-launcher karma-ui5
-```
-
-Afterwards, we need to configure Karma. Therefore we create a simple `karma.conf.js` file in the project root:
-
-```js
-module.exports = function (config) {
-  config.set({
-    frameworks: ["ui5"],
-    browsers: ["Chrome"],
-  });
-};
-```
-
-With the configuration above, Karma starts Chrome to run the QUnit/OPA tests automatically. By default, Karma stays open and watches for changes when running the following command:
+To automate the execution of the QUnit/OPA tests, we are using [`ui5-test-runner`](https://arnaudbuchholz.github.io/ui5-test-runner/). To add the required dependency you need to run the following command:
 
 ```sh
-npx karma start
+npm install --save-dev ui5-test-runner
 ```
 
-For an automatic execution of the QUnit/OPA tests in your CI environment, it makes sense to configure Karma to run the tests in a headless Chrome and not using the watch mode. To do so, put the following configuration in a file called `karma-ci.conf.js` in the project root:
-
-```js
-module.exports = function (config) {
-	require("./karma.conf")(config);
-  config.set({
-    browsers: ["ChromeHeadless"],
-    singleRun: true,
-  });
-};
-```
-
-When running the following command, it executes your QUnit/OPA tests in a headless Chrome and ends the process once the test execution is completed:
+While `ui5-test-runner` can launch the app in its legacy mode, it requires the app to be available at a given URL in normal mode, so start the app first (if not running) in a different terminal, then the test-runner:
 
 ```sh
-npx karma start karma-ci.conf.js
+npm start
+npx ui5-test-runner --port 8081 --url http://localhost:8080/test/testsuite.qunit.html
 ```
 
-### 14. Add Scripts for Testing to `package.json` (Bonus)
+Port 8081 is where the progress of the tests can be observed while they are running (at http://localhost:8081/_/progress.html).
 
-Now it's time to write down the testing commands used so far as scripts in `package.json`, so you don't need to type them every time they are used. :wink:
+After running the tests, a `report` folder will be created, which contains all kinds of information about the test run, including screenshots.
 
-Add the following test execution scripts to your `"scripts"` section to your `package.json`:
+Add this `report` folder to your `.gitignore` file, as it is not meant to be checked in.
+
+
+## 14. Enable Code Coverage Reporting
+
+To measure code coverage, the code needs to be instrumented. In contrast to JavaScript, the code instrumentation for coverage reporting in TypeScript does not work with `@ui5/middleware-code-coverage` at the moment. Instead, the Babel plugin `istanbul` needs to be set up in the Babel configuration of the `ui5-tooling-transpile` middleware. This is also documented by the [`ui5-test-runner`](https://github.com/ArnaudBuchholz/ui5-test-runner/blob/main/docs/coverage.md#typescript-ui5cli-projects).
+
+
+### a) Configuration in `ui5-coverage.yaml`
+
+Code instrumentation is not always needed, only for coverage tests. Hence, create an additional configuration file `ui5-coverage.yaml` as copy of `ui5.yaml` with the `ui5-tooling-transpile-middleware` section extended like this. The respective npm script in `package.json` will then reference this file.
+
+```yaml
+    - name: ui5-tooling-transpile-middleware
+      afterMiddleware: compression
+      configuration:
+        debug: true
+        babelConfig:
+          sourceMaps: true
+          ignore:
+          - "**/*.d.ts"
+          presets:
+          - - "@babel/preset-env"
+            - targets: defaults
+          - - transform-ui5
+          - "@babel/preset-typescript"
+          plugins:
+          - istanbul
+```
+
+### b) Add `babel-plugin-istanbul` Dependency
+
+Add the `babel-plugin-istanbul` referenced in the last line above to the project's dev dependencies:
+
+```sh
+npm install --save-dev babel-plugin-istanbul
+```
+
+### c) Use `.nycrc.json` to Exclude Test Files from Coverage
+
+To exclude the test files from coverage reporting, create a `.nycrc.json` file with the following content:
 
 ```json
 {
-    [...],
-    "karma": "karma start",
-    "karma-ci": "karma start karma-ci.conf.js",
-    "test": "npm run lint && npm run karma-ci"
+    "all": true,
+    "sourceMap": false,
+    "exclude": [
+        "**/test/**/*.ts"
+    ]
 }
 ```
 
-For the general `test` script, we recommend to execute `lint` and the `karma-ci` tests to validate that static code checks and the functional and integration tests are executed when testing your app.
+### Running Tests with Code Coverage
 
-Still more? Okaayy, then let's add code coverage...
-
-### 15. Enable Code Coverage (Extra-Bonus)
-
-To measure the code coverage, we are using the preprocessors [`karma-ui5-transpile`](https://www.npmjs.com/package/karma-ui5-transpile) to transpile and [`karma-coverage`](https://www.npmjs.com/package/karma-coverage) to instrument our source code and the finally the `karma-coverage` plugin creates the coverage report. To add the required dependencies you need to run the following command:
+Now, you are ready to run your first test execution with coverage reporting. To do so, run the following commands (in different terminals). The first one runs the UI5 dev server with the new yaml including coverage configuration (stop the regular `npm start` if still running to free port 8080), the second one launches the actual tests witch certain coverage thresholds:
 
 ```sh
-npm install --save-dev karma-coverage karma-ui5-transpile
+npx ui5 serve --port 8080 --config ui5-coverage.yaml
+npx ui5-test-runner --port 8081 --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 85 -ccs 85
 ```
 
-Now, we need to create the `karma-ci-cov.conf.js` to configure Karma to use the `karma-ui5-transpile` and `karma-coverage` for the coverage test run. As output format of the coverage results, we configure  to create `'text-summary', 'lcovonly', 'cobertura', 'html'` reports in the `coverage` folder:
-
-```js
-module.exports = function (config) {
-  require("./karma-ci.conf")(config);
-  config.set({
-    reporters: ["progress", "coverage"],
-    preprocessors: {
-      "webapp/**/*.ts": ["ui5-transpile", "coverage"],
-    },
-    coverageReporter: {
-      dir: "coverage",
-      reporters: [
-        { type: "html", subdir: "report-html" },
-        { type: "cobertura", subdir: ".", file: "cobertura.txt" },
-        { type: "lcovonly", subdir: ".", file: "report-lcovonly.txt" },
-        { type: "text-summary" },
-      ],
-    },
-  });
-};
-```
-
-Please also make sure to add the `coverage` folder to your `.gitignore` file.
-
-Now, you are ready to run your first test execution with coverage reporting. To do so, run the following command:
-
-```sh
-npx karma start karma-ci-cov.conf.js
-```
-
-After the execution finished, you should be able to see a **Coverage summary** in your console and you can find the results of the test coverage run in your `coverage` folder. The following resources are being created for the different reports:
+After the execution finished, you should see a **Coverage summary** in your console and you can find the results of the test coverage run in your `coverage` folder. The following resources are being created for the different report formats:
 
 * `lcovonly`: `coverage/lcov.info`
 * `cobertura`: `cobertura-coverage.xml`
-* `html`: `report-html/index.html`
+* `html`: `coverage/lcov-report/index.html`
 
-### 16. Add Scripts for Coverage Testing to `package.json` (Extra-Bonus)
+Add the `coverage` and `.nyc_output` folders which are created during the tests to your `.gitignore` file.
 
-Congratulations! As a last step, we write down the coverage testing command in the scripts section in the `package.json`. Add the following test execution scripts to your `"scripts"` section to your `package.json`:
+
+## 15. Add Scripts for Testing to `package.json`
+
+Now it's time to write down the testing commands used so far as scripts in `package.json`, so you don't need to type them every time they are used. Also, having to start the server and the tests separately is a bit tedious, so let's first add the tool `start-server-and-test` as dev dependency, which helps writing npm scripts doing both:
+
+```sh
+npm install --save-dev start-server-and-test
+```
+
+Now you can add the following test execution scripts to your `"scripts"` section to your `package.json`:
 
 ```json
 {
     [...],
-    "karma-ci-cov": "karma start karma-ci-cov.conf.js",
-    "test": "npm run lint && npm run karma-ci-cov"
+    "start-coverage": "ui5 serve --port 8080 --config ui5-coverage.yaml",
+    "test-runner": "ui5-test-runner --port 8081 --url http://localhost:8080/test/testsuite.qunit.html",
+    "test-runner-coverage": "ui5-test-runner --port 8081 --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 85 -ccs 85",
+    "test-ui5": "start-server-and-test start-coverage http://localhost:8080 test-runner-coverage",
+    "test": "npm run lint && npm run test-ui5",
 }
 ```
 
-The `npm test` command now first runs the static code checks and afterwards the functional and integration tests with code coverage.
+In addition to the already used commands, there is `test-ui5`, which uses `start-server-and-test` to first start the dev server with coverage configuration and then runs all tests with coverage. So this is suitable for running tests in a CI scenario with one single command.
 
-This is the end! You good a comprehensive and complete overview on TypeScript Development with UI5. You tackled many different topics from getting started, through development and finally testing. You are prepared to start working with TypeScript and UI5!
+For the general `test` script, we recommend to execute `lint` and `test-ui5` to validate that static code checks and the functional and integration tests are executed when testing your app.
 
-### 17. One More Thing: Housekeeping
 
-To be able to cleanup your project, you can also add a `clean` script which deletes the build and test output. The utlitiy [`rimraf`](https://www.npmjs.com/package/rimraf) is a simple binary which can be used to delete folders recursivly. To install it, execute the following command:
-
-```sh
-npm install --safe-dev rimraf
-```
-
-Last thing is to create the `script` in the `package.json`:
-
-```json
-  "scripts": {
-    "clean": "rimraf dist coverage",
-```
-
-To run it, just call:
-
-```sh
-npm run clean
-```
-
-Enjoy...
+This is the end! You got a comprehensive and complete overview on UI5 application development with TypeScript from the very basics. All setup details, which might be skipped in other tutorials because the setup is already prepared, should be explained now.
 
 ## Done!
 
-You now have not only a fully functional TypeScript app development setup with all the features and npm scripts described in the [README.md](README.md) file of this repository – but hopefully also an understanding of the different tools and configurations used in this setup!
+You now have not only a fully functional TypeScript app development setup with all the features and npm scripts – but hopefully also an understanding of the different tools and configurations used in this setup!
