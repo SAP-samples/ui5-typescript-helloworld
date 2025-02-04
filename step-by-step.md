@@ -1,10 +1,10 @@
-# A Detailed Guide to Creating a UI5 TypeScript App From Scratch in Five to Seventeen Steps
+# A Detailed Guide to Creating a UI5 TypeScript App From Scratch in Five to Fifteen Steps
 
 This guide explains step-by-step and command-by-command how you achieve a complete UI5 TypeScript setup from scratch.
 
 While you can get started faster by using the [Easy-UI5 "ts-app" template](https://github.com/ui5-community/generator-ui5-ts-app) or just copying and modifying the entire Hello World app, this step-by-step guide will help you *understand* every bit and piece of the setup and how the pieces fit together.
 
-It consists of 17 steps, but in fact only steps 2, 3, 4 and 6 are really related to the basic TypeScript setup. The remaining steps are about adding the UI5 tools to the project, about testing and about wrapping everything up nicely, so these steps apply more or less to any UI5 application project.
+It consists of 15 steps, but in fact only steps 2, 3, 4 and 6 are really related to the basic TypeScript setup and steps 11, 12 and 14 to testing in TypeScript. The remaining steps are about adding the UI5 tools to the project and about wrapping everything up nicely, so those steps apply more or less to any UI5 application project regardless of the used language.
 
 ## Table of Contents
 
@@ -18,10 +18,10 @@ It consists of 17 steps, but in fact only steps 2, 3, 4 and 6 are really related
 1. [Set Up Live Reload for Easier Development (Optional)](#8-set-up-live-reload-for-easier-development-optional)
 1. [Add an Optimized UI5 Build (Optional)](#9-add-an-optimized-ui5-build-optional)
 1. [Add Scripts for Building/Running/Checking to `package.json`](#10-add-scripts-for-buildingrunningchecking-to-packagejson)
-1. [Add the Test Code](#11-add-the-test-code)
+1. [The Test Code](#11-the-test-code)
 1. [Enable TypeScript support for the Test Code](#12-enable-typescript-support-for-the-test-code)
 1. [Automated QUnit/OPA Testing using `ui5-test-runner`](#13-automated-qunitopa-testing-using-ui5-test-runner)
-1. [Enable Code Coverage](#14-enable-code-coverage)
+1. [Enable Code Coverage Reporting](#14-enable-code-coverage-reporting)
 1. [Add Scripts for Testing to `package.json`](#15-add-scripts-for-testing-to-packagejson)
 
 ## 1. Initialize an Empty Project
@@ -223,7 +223,7 @@ In the configuration file all kinds of details regarding the ESLint rules can be
 
 ## 5. Set Up the UI5 CLI Tooling
 
-To benefit from an improved development experience and the possibility to build and optimize your application before productive use, it is recommended to use the [UI5 CLI Tooling](https://sap.github.io/ui5-tooling/pages/CLI/). You can benefit from an ecosystem of tooling extensions (e.g., livereload, proxies, ...) to simplify your development.
+To benefit from an improved development experience and the possibility to build and optimize your application before productive use, it is recommended to use the [UI5 CLI Tooling](https://sap.github.io/ui5-tooling/pages/CLI/). You can benefit from an ecosystem of tooling extensions (e.g., livereload, proxies, ...) to simplify your development. It also nicely integrates the TypeScript transpilation (see the next chapter), so you do not have to invoke the transpiler directly.
 
 You can install the UI5 CLI Tooling with the following command:
 
@@ -326,7 +326,7 @@ That's it! A web server with the test page is started and it is automatically op
 
 ## 6. Using a UI5 Tooling Extension for Code Transformation
 
-The code transpiled by `tsc` still uses ES modules and classes which need to be transformed to classic UI5 code. To do so, we need to do the transpilation in a different way, using the [`ui5-tooling-transpile`](https://www.npmjs.com/package/ui5-tooling-transpile) tooling extension. It uses the [Babel](https://babeljs.io/) transpiler behind the scenes. The TypeScript compiler will no longer be called directly from now on. Instead, the UI5 Tooling now integrates the transpilation *and* the code transformation into its build lifecycle as Babel plugins.
+The code transpiled by `tsc` still uses ES modules and classes, which would still need to be transformed to classic UI5 code to work properly. To apply this transformation, we will use the [`ui5-tooling-transpile`](https://www.npmjs.com/package/ui5-tooling-transpile) tooling extension instead of calling `tsc`. This tooling extension uses the [Babel](https://babeljs.io/) transpiler behind the scenes and configures Babel to 1. transpile the code to JavaScript and 2. transform the code to proper UI5 code (especially UI5-style imports and classes). The TypeScript compiler will no longer be called for the transpilation from now on, only for the type checking.
 
 Add the dependency to `ui5-tooling-transpile` to your project first:
 
