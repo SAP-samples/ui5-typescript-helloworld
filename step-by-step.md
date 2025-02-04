@@ -1,6 +1,6 @@
-# A Detailed Guide to Create a UI5 TypeScript App From Scratch in Five to Seventeen Steps
+# A Detailed Guide to Creating a UI5 TypeScript App From Scratch in Five to Seventeen Steps
 
-This guide explains step-by-step and command-by-command how you get to a complete UI5 TypeScript setup from scratch.
+This guide explains step-by-step and command-by-command how you achieve a complete UI5 TypeScript setup from scratch.
 
 While you can get started faster by using the [Easy-UI5 "ts-app" template](https://github.com/ui5-community/generator-ui5-ts-app) or just copying and modifying the entire Hello World app, this step-by-step guide will help you *understand* every bit and piece of the setup and how the pieces fit together.
 
@@ -23,8 +23,6 @@ It consists of 17 steps, but in fact only steps 2, 3, 4 and 6 are really related
 1. [Automated QUnit/OPA Testing using `ui5-test-runner`](#13-automated-qunitopa-testing-using-ui5-test-runner)
 1. [Enable Code Coverage](#14-enable-code-coverage)
 1. [Add Scripts for Testing to `package.json`](#15-add-scripts-for-testing-to-packagejson)
-1. [Add Scripts for Coverage Testing to `package.json`](#16-add-scripts-for-coverage-testing-to-packagejson)
-1. [One More Thing: Housekeeping](#17-one-more-thing-housekeeping)
 
 ## 1. Initialize an Empty Project
 
@@ -35,7 +33,7 @@ mkdir ui5-typescript-from-scratch
 cd ui5-typescript-from-scratch
 ```
 
-Initialize an [npm](https://www.npmjs.com)-based project - this creates the `package.json` file in which also the dependencies will be added:
+Initialize an [npm](https://www.npmjs.com)-based project - this creates the `package.json` file where also the dependencies will be added:
 
 ```sh
 npm init -y
@@ -83,8 +81,8 @@ npm install --save-dev typescript @types/openui5
 
 When you are developing a SAPUI5 application (i.e. also using control libraries which are not available in OpenUI5), use the `@sapui5/types` types instead of the `@types/openui5` ones.
 
-> **Remark:** There are also `@openui5/types` types available - how do they differ from the `@types/openui5` ones?<br>
-The content is basically the same, one difference is in versioning: while the types in the `@openui5` namespace are exactly in sync with the respective OpenUI5 patch release, the ones in the `@types` namespace follow the [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) versioning and are only released *once* per minor release of OpenUI5 ([more details here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#versioning)), not for every patch. In practice it shouldn't make a noticeable difference what you use, but note that in the `@types` namespace there is usually only the `*.*.0` patch release available.<br>
+> **Remark:** There are also `@openui5/types` available - how do they differ from the `@types/openui5` ones?<br>
+The content is basically the same, one difference is in versioning: while the types in the `@openui5` namespace are exactly in sync with the respective OpenUI5 patch release, the ones in the `@types` namespace follow the [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) versioning and are only released *once* per minor release of OpenUI5 ([more details here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#versioning)), not for every patch. In practice, it shouldn't make a noticeable difference which you use, but note that in the `@types` namespace there is usually only the `*.*.0` patch release available.<br>
 > The SAPUI5 types are not available in the `@types` namespace.
 
 To trigger the first TypeScript transpilation in this project, now execute
@@ -225,7 +223,7 @@ In the configuration file all kinds of details regarding the ESLint rules can be
 
 ## 5. Set Up the UI5 CLI Tooling
 
-To benefit from an improved development experience and the possibility to build and optimize your application before productive use, it is recommended to use the [UI5 CLI Tooling](https://sap.github.io/ui5-tooling/pages/CLI/). You can benefit from an ecosystem of tooling extensions (i.e., livereload, proxies, ...) to simplify your development.
+To benefit from an improved development experience and the possibility to build and optimize your application before productive use, it is recommended to use the [UI5 CLI Tooling](https://sap.github.io/ui5-tooling/pages/CLI/). You can benefit from an ecosystem of tooling extensions (e.g., livereload, proxies, ...) to simplify your development.
 
 You can install the UI5 CLI Tooling with the following command:
 
@@ -328,7 +326,7 @@ That's it! A web server with the test page is started and it is automatically op
 
 ## 6. Using a UI5 Tooling Extension for Code Transformation
 
-The code transpiled by `tsc` still uses ES modules and classes which need to be transformed to classic UI5 code. To do so, we need to do the transpilation in a different way, using the [`ui5-tooling-transpile`](https://www.npmjs.com/package/ui5-tooling-transpile) tooling extension. It uses the [Babel](https://babeljs.io/) transpiler behind the scenes. The TypeScript compiler will no longer be called directly from now on. Instead, the UI5 Tooling now integraties the transpilation *and* the code transformation into its build lifecycle as Babel plugins.
+The code transpiled by `tsc` still uses ES modules and classes which need to be transformed to classic UI5 code. To do so, we need to do the transpilation in a different way, using the [`ui5-tooling-transpile`](https://www.npmjs.com/package/ui5-tooling-transpile) tooling extension. It uses the [Babel](https://babeljs.io/) transpiler behind the scenes. The TypeScript compiler will no longer be called directly from now on. Instead, the UI5 Tooling now integrates the transpilation *and* the code transformation into its build lifecycle as Babel plugins.
 
 Add the dependency to `ui5-tooling-transpile` to your project first:
 
@@ -400,7 +398,7 @@ Alternatively, you could of course also develop your own UI5 app in TypeScript w
 
 ## 8. Set Up Live Reload for Easier Development (Optional)
 
-Making the browser reload the app automatically when you modify the sources you only need to add the [`livereload`](https://www.npmjs.com/package/ui5-middleware-livereload) middleware. This middleware checks for any changes in the `webapp` folder and causes the browser to reload when such a change is detected.
+To make the browser reload the app automatically when you modify the sources, you only need to add the [`livereload`](https://www.npmjs.com/package/ui5-middleware-livereload) middleware. This middleware checks for any changes in the `webapp` folder and causes the browser to reload when such a change is detected.
 
 The `livereload` middleware is added as follows. First, add it as another dependency:
 
@@ -464,7 +462,7 @@ framework:
     - name: themelib_sap_horizon
 ```
 
-One difference to the other yaml file is the removed the `builder` and `middleware` configuration sections, as they are not needed anymore in a productive build, and the other one is the addition of the `resources` section which tells the UI5 Tooling to serve from the `dist` directory.
+One difference from the other yaml file is the removal of the `builder` and `middleware` configuration sections, as they are not needed anymore in a productive build, and the other one is the addition of the `resources` section which tells the UI5 Tooling to serve from the `dist` directory.
 
 To run the build result from `dist`, `ui5 serve` can then be executed as before, but additionally using this new configuration file:
 
@@ -493,11 +491,13 @@ Calling `npx` is not needed here, as the commands are automatically found within
 
 An important topic has been skipped so far - let's take a look into testing!
 
-## 11. The Test Code - Overview
+## 11. The Test Code
 
-The location for the QUnit tests for UI5 applications is the `webapp/test` folder. So far we have ignored its content. Now let's step through all parts of it. This is the overall structure.
+### Overview
 
-It is [exactly the same structure and files as for JavaScript projects](https://github.com/ui5-community/generator-ui5-app/tree/main/generators/app/templates/webapp/test), so this page does not go into all the details, but focuses on the TypeScript-specific parts.
+The location for the QUnit tests for UI5 applications is the `webapp/test` folder. So far we have ignored its content. Now let's step through all parts of it. Below you see the overall structure.
+
+It is [exactly the same structure and files as for JavaScript projects](https://github.com/ui5-community/generator-ui5-app/tree/main/generators/app/templates/webapp/test), so this section does not go into all the details, but focuses on the TypeScript-specific parts.
 
 ```text
 webapp/test
@@ -515,14 +515,42 @@ webapp/test
 └── testsuite.qunit.html      // the general testsuite html page
 ```
 
-Starting from the root level at the bottom of the above tree:
-- `testsuit.qunit.html` is the main entry point and makes the UI5 test starter build the overall testsuite according to the configuration in `testsuite.qunit.ts`.
+Starting from the last item of the above tree:
+- `testsuite.qunit.html` is the main entry point and makes the UI5 test starter build the overall testsuite according to the configuration in `testsuite.qunit.ts`.
 - `testsuite.qunit.ts` is the overall test configuration as defined and required by the [UI5 test starter](https://ui5.sap.com/sdk/#/topic/22f50c0f0b104bf3ba84620880793d3f).
 - `Test.qunit.html` is the generic test page in which the tests are run. It will be called with the test suite and test name in order to run a test.
 - `unitTests.qunit.ts` is where all QUnit test pages are registered by simply importing their modules: `import "unit/controller/App.qunit";`
 - `App.qunit.ts` is an example of a very basic unit test written in TypeScript.
 - `opaTests.qunit.ts` is like for the unit tests the central place where you register your journeys by importing them: `import "integration/HelloJourney";`.
 - `HelloJourney.ts` and `AppPage.ts` are the well-known journeys and pages for OPA tests, but they come with a twist in TypeScript, or rather: a simplification. See the main README.md file for details.
+
+
+### Unit Tests (QUnit)
+
+Writing [Unit tests (QUnit)](./webapp/test/unit/) in TypeScript is straightforward, just as you know it from JavaScript.
+
+In the (very basic) tests in [`webapp/test/unit/controller/App.qunit.ts`](webapp/test/unit/controller/App.qunit.ts) there is nothing surprising from TypeScript perspective. There isn't any TypeScript-specific syntax required, but of course ES6-style imports are used just like in TypeScript application code.
+
+> Note: `QUnit` is globally defined and its types are automatically required by the UI5 types. So there is no setup needed to use it. However, in order to allow clean code that does not access any globals, starting with UI5 1.112, QUnit should be explicitly imported like this: `import QUnit from "sap/ui/thirdparty/qunit-2";`
+
+### Integration Tests (OPA)
+
+OPA tests are written in a simplified and slightly different way compared to JavaScript, so make sure to carefully read this section!
+
+#### The "Hello" Journey
+
+The test journey [`webapp/test/integration/HelloJourney.ts`](webapp/test/integration/HelloJourney.ts) is overall pretty straightforward, but it comes with one significant difference to JavaScript: the `Given`/`When`/`Then` objects normally given to the `opaTest(...)` callback are **not used at all!**<br>
+Instead, the actions and assertions are called directly on the OPA test Page (in this case the `AppPage`). The same goes for setup and teardown functions like `iStartMyUIComponent()` and `iTeardownMyApp()`, which are also available on the Page, as it inherits from `Opa5`.
+
+You are free to make the difference between actions and assertions clear with comments, but there is no need to carry different entities around through the code, especially as those entities are hard to fit into the TypeScript world.
+
+#### The "App" Page
+
+This is where the biggest changes are done compared to non-TypeScript OPA tests: the OPA Pages are simply classes extending `Opa5`, having the actions and assertions as class methods.
+
+Apart from this, the implementation of the actions and assertions is done just like in JavaScript.
+
+
 
 ## 12. Enable TypeScript support for the Test Code
 
@@ -546,7 +574,7 @@ To automate the execution of the QUnit/OPA tests, we are using [`ui5-test-runner
 npm install --save-dev ui5-test-runner
 ```
 
-While `ui5-test-runner` can launch the app in its legacy mode, it requires the app to be available at a given URL in normal mode, so start the app first (if not running) in a different terminal, then the test-runner:
+While `ui5-test-runner` can launch the app in its legacy mode, it requires the app to be available at a given URL in normal mode. Therefore, start the app first (if not running) in a different terminal, then the test-runner:
 
 ```sh
 npm start
@@ -611,7 +639,7 @@ To exclude the test files from coverage reporting, create a `.nycrc.json` file w
 
 ### Running Tests with Code Coverage
 
-Now, you are ready to run your first test execution with coverage reporting. To do so, run the following commands (in different terminals). The first one runs the UI5 dev server with the new yaml including coverage configuration (stop the regular `npm start` if still running to free port 8080), the second one launches the actual tests witch certain coverage thresholds:
+Now, you are ready to run your first test execution with coverage reporting. To do so, run the following commands (in different terminals). The first one runs the UI5 dev server with the new yaml including coverage configuration (stop the regular `npm start` if still running to free port 8080), and the second one launches the actual tests witch certain coverage thresholds:
 
 ```sh
 npx ui5 serve --port 8080 --config ui5-coverage.yaml
