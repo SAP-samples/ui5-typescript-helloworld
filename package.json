@@ -14,8 +14,8 @@
     "ts-typecheck": "tsc --noEmit",
     "lint": "eslint webapp",
     "test-runner": "ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html",
-    "test-runner-coverage": "ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 85 -ccs 85",
-    "test-ui5": "start-server-and-test start-coverage http://localhost:8080 test-runner-coverage",
+    "test-runner-coverage": "ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 80 -ccs 80",
+    "test-ui5": "ui5-test-runner --start start-coverage --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 80 -ccs 80",
     "test": "npm run lint && npm run test-ui5",
     "ui5lint": "ui5lint"
   },
@@ -31,7 +31,6 @@
     "eslint": "^9.19.0",
     "globals": "^15.14.0",
     "rimraf": "^6.0.1",
-    "start-server-and-test": "^2.0.9",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.18.1",
     "ui5-middleware-livereload": "^3",

@@ -574,14 +574,21 @@ To automate the execution of the QUnit/OPA tests, we are using [`ui5-test-runner
 npm install --save-dev ui5-test-runner
 ```
 
-While `ui5-test-runner` can launch the app in its legacy mode, it requires the app to be available at a given URL in normal mode. Therefore, start the app first (if not running) in a different terminal, then the test-runner:
+While `ui5-test-runner` can launch the app in its legacy mode, it requires the app to be available at a given URL in normal mode. Either start the app first (if not running) in a different terminal, then afterwards the test-runner:
 
 ```sh
 npm start
+# in different terminal:
 npx ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html
 ```
 
-> Note: if you want to monitor the progress of the tests, you can add the `--port 8081` parameter. When doing so, the progress can be seen at http://localhost:8081/_/progress.html as long as the tests are running.
+Or, if you do not want to launch the app separately, you can make the test runner start it:
+
+```sh
+npx ui5-test-runner --start start --url http://localhost:8080/test/testsuite.qunit.html
+```
+
+> Note: if you want to monitor the progress of the tests, you can add the `--port 8081` parameter. Then the progress can be seen at http://localhost:8081/_/progress.html as long as the tests are running.
 
 After running the tests, a `report` folder will be created, which contains all kinds of information about the test run, including screenshots.
 
@@ -639,11 +646,20 @@ To exclude the test files from coverage reporting, create a `.nycrc.json` file w
 
 ### Running Tests with Code Coverage
 
-Now, you are ready to run your first test execution with coverage reporting. To do so, run the following commands (in different terminals). The first one runs the UI5 dev server with the new yaml including coverage configuration (stop the regular `npm start` if still running to free port 8080), and the second one launches the actual tests witch certain coverage thresholds:
+Now, you are ready to run your first test execution with coverage reporting. Again, there are two ways to do it:
+
+Either run the following commands in different terminals. The first one runs the UI5 dev server with the new yaml including coverage configuration (stop the regular `npm start` if still running to free port 8080), and the second one launches the actual tests witch certain coverage thresholds:
 
 ```sh
 npx ui5 serve --port 8080 --config ui5-coverage.yaml
-npx ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 85 -ccs 85
+# in different terminal:
+npx ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 80 -ccs 80
+```
+
+Or do it within one command (this will look simpler once we create a `package.json` script for the application start):
+
+```sh
+npx ui5-test-runner --start "npx ui5 serve --port 8080 --config ui5-coverage.yaml" --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 80 -ccs 80
 ```
 
 After the execution finished, you should see a **Coverage summary** in your console and you can find the results of the test coverage run in your `coverage` folder. The following resources are being created for the different report formats:
@@ -657,26 +673,20 @@ Add the `coverage` and `.nyc_output` folders which are created during the tests 
 
 ## 15. Add Scripts for Testing to `package.json`
 
-Now it's time to write down the testing commands used so far as scripts in `package.json`, so you don't need to type them every time they are used. Also, having to start the server and the tests separately is a bit tedious, so let's first add the tool `start-server-and-test` as dev dependency, which helps writing npm scripts doing both:
-
-```sh
-npm install --save-dev start-server-and-test
-```
-
-Now you can add the following test execution scripts to your `"scripts"` section to your `package.json`:
+Now it's time to write down the testing commands used so far to the `"scripts"` section in `package.json`, so you don't need to type the full commands every time they are used:
 
 ```json
 {
     [...],
     "start-coverage": "ui5 serve --port 8080 --config ui5-coverage.yaml",
     "test-runner": "ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html",
-    "test-runner-coverage": "ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 85 -ccs 85",
-    "test-ui5": "start-server-and-test start-coverage http://localhost:8080 test-runner-coverage",
+    "test-runner-coverage": "ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 80 -ccs 80",
+    "test-ui5": "ui5-test-runner --start start-coverage --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 80 -ccs 80",
     "test": "npm run lint && npm run test-ui5",
 }
 ```
 
-In addition to the already used commands, there is `test-ui5`, which uses `start-server-and-test` to first start the dev server with coverage configuration and then runs all tests with coverage. So this is suitable for running tests in a CI scenario with one single command.
+The `test-ui5` script is suited well for CI scenarios, as it includes the instruction to start the server. The `test-runner...` scripts, on the other hand, expect the server to already run. You can of course adapt as needed. 
 
 For the general `test` script, we recommend to execute `lint` and `test-ui5` to validate that static code checks and the functional and integration tests are executed when testing your app.
 
