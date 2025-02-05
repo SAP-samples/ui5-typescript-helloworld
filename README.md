@@ -57,10 +57,11 @@ Once the project is set up (`git clone` and `npm install`, see further down), th
 2. *Headless testing*: launch test-runner either *without* coverage reporting using `npm run test-runner` or *with* coverage using `npm run test-runner-coverage`.
 While the tests are running, their status can be monitored at http://localhost:8081/_/progress.html
 
+> Note: when the application to test is passed using the `--url` argument (as we do it in this sample), then there is [no "watch" mode of the ui5-test-runner so far](https://github.com/ArnaudBuchholz/ui5-test-runner/issues/119), which automatically re-runs the tests when a resource changes. 
 
 ## Limitations
 
-There might be further improvements to how tests are written and configured.
+In the future there might be further improvements to how tests are written and configured.
 
 ## Known Issues
 

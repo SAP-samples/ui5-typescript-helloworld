@@ -578,10 +578,10 @@ While `ui5-test-runner` can launch the app in its legacy mode, it requires the a
 
 ```sh
 npm start
-npx ui5-test-runner --port 8081 --url http://localhost:8080/test/testsuite.qunit.html
+npx ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html
 ```
 
-Port 8081 is where the progress of the tests can be observed while they are running (at http://localhost:8081/_/progress.html).
+> Note: if you want to monitor the progress of the tests, you can add the `--port 8081` parameter. When doing so, the progress can be seen at http://localhost:8081/_/progress.html as long as the tests are running.
 
 After running the tests, a `report` folder will be created, which contains all kinds of information about the test run, including screenshots.
 
@@ -643,7 +643,7 @@ Now, you are ready to run your first test execution with coverage reporting. To 
 
 ```sh
 npx ui5 serve --port 8080 --config ui5-coverage.yaml
-npx ui5-test-runner --port 8081 --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 85 -ccs 85
+npx ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 85 -ccs 85
 ```
 
 After the execution finished, you should see a **Coverage summary** in your console and you can find the results of the test coverage run in your `coverage` folder. The following resources are being created for the different report formats:
@@ -669,8 +669,8 @@ Now you can add the following test execution scripts to your `"scripts"` section
 {
     [...],
     "start-coverage": "ui5 serve --port 8080 --config ui5-coverage.yaml",
-    "test-runner": "ui5-test-runner --port 8081 --url http://localhost:8080/test/testsuite.qunit.html",
-    "test-runner-coverage": "ui5-test-runner --port 8081 --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 85 -ccs 85",
+    "test-runner": "ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html",
+    "test-runner-coverage": "ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 85 -ccs 85",
     "test-ui5": "start-server-and-test start-coverage http://localhost:8080 test-runner-coverage",
     "test": "npm run lint && npm run test-ui5",
 }
