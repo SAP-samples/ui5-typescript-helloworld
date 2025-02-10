@@ -2,42 +2,50 @@
 
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/ui5-typescript-helloworld)](https://api.reuse.software/info/github.com/SAP-samples/ui5-typescript-helloworld)
 
-Note: in general, all information relevant for UI5 application development in TypeScript can be found at https://sap.github.io/ui5-typescript
+**The main resource in this repository is [the detailed step-by-step guide](step-by-step.md), which explains how the TypeScript setup is created from scratch and how all the bits and pieces fit together.**
 
 ## Description
 
-This app demonstrates a TypeScript setup for developing UI5 applications.
+This app demonstrates the TypeScript setup for developing UI5 applications, including testing. The focus is on *understanding the setup* [step by step](step-by-step.md).
 
-As the focus is on the TypeScript setup, the app code itself is quite minimal, it is not using models, translation files etc.
+If you are *not* here for understanding the setup, then:
+- The *fastest* way to get started with an app is using the yeoman-based [Easy-UI5 template "ts-app"](https://github.com/ui5-community/generator-ui5-ts-app).
+- In the *[custom-controls](https://github.com/SAP-samples/ui5-typescript-helloworld/tree/custom-controls)* branch, there is an example how custom controls can be developed in TypeScript within applications.
+- In the [ui5-2.0](https://github.com/SAP-samples/ui5-typescript-helloworld/tree/ui5-2.0) branch, this repository demonstrates how an application can be tested against the type definitions (and runtime) of the upcoming *UI5 2.x version*.
+- A more complete *real-life-like* application is in the [TypeScript branch of the "UI5 CAP Event App"](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript). It comes with an [explanation](https://github.com/SAP-samples/ui5-cap-event-app/blob/typescript/docs/typescript.md) of what UI5 TypeScript code usually looks like and what to consider.
+- All *general information* about UI5 application development in TypeScript and links to tutorials, videos etc. can be found at https://sap.github.io/ui5-typescript.
 
-**This repository also contains [a detailed step-by-step guide](step-by-step.md), which explains how this setup is created and how all the bits and pieces fit together.**
 
-**In the [custom-controls](https://github.com/SAP-samples/ui5-typescript-helloworld/tree/custom-controls) branch, this repository also contains instructions and an example how custom controls can be developed in TypeScript within applications.**
+## Overview of TypeScript-related Entities
 
-**In the [ui5-2.0](https://github.com/SAP-samples/ui5-typescript-helloworld/tree/ui5-2.0) branch, this repository demonstrates how an application can be tested against the type definitions (and runtime) of the upcoming UI5 2.x version.**
+- The UI5 type definitions (`*.d.ts` files) are loaded as dev dependency from [npm](https://www.npmjs.com/package/@types/openui5).
+- The file [tsconfig.json](tsconfig.json) contains the configuration for the TypeScript compilation, including a reference to the UI5 `*.d.ts` files.
+-  The TypeScript-to-JavaScript transpilation is done by [`ui5-tooling-transpile`](https://www.npmjs.com/package/ui5-tooling-transpile), which acts as both a build plugin (build results are stored in the `dist` folder) and middleware (the UI5 dev server transpiles the TypeScript files from `webapp` before sending it to the browser). Under the hood it uses the [Babel](https://babeljs.io/) transpiler.
+- In addition to the TypeScript compilation, there is also a conversion from the ES6 module and class syntax used in the source files to the classic UI5 module loading and class definition syntax (`sap.ui.require(...)`/`sap.ui.define(...)` and `SuperClass.extend(...)`). This conversion is also done by `ui5-tooling-transpile`, using the [babel-plugin-transform-modules-ui5](https://github.com/ui5-community/babel-plugin-transform-modules-ui5) project from the UI5 Community (initially developed by Ryan Murphy).
 
-**The [TypeScript branch of the "UI5 CAP Event App"](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript) sample demonstrates a slightly more complex application, using the same setup. It comes with an [explanation](https://github.com/SAP-samples/ui5-cap-event-app/blob/typescript/docs/typescript.md) of what UI5 TypeScript code usually looks like and what to consider.**
+## A Note on Testing
 
-The UI5con 2021 session on TypeScript ([recording available at YouTube](https://www.youtube.com/watch?v=aXzcsOZH4q8)) explains the overall approach for TypeScript and UI5.
+The main differences to tests written in JavaScript relate to a) writing OPA tests and b) configuring code coverage instrumentation:
 
-There is also an [application template](https://github.com/ui5-community/generator-ui5-ts-app) (based on yeoman and easy-ui5) which has been shown in the [UI5con Keynote](https://www.youtube.com/watch?v=aXzcsOZH4q8) and explained in [this blog](https://blogs.sap.com/2021/07/01/getting-started-with-typescript-for-ui5-application-development/).
+The *structural* code differences to writing tests in *JavaScript* are:
+1. The **OPA Pages are simply classes extending `Opa5`, having the actions and assertions as class methods**.
+2. The **OPA Journeys do not use the `Given`/`When`/`Then` objects, but call actions and assertions directly on the Page objects**. 
 
-| :point_up: Overview of TypeScript-related Entities |
-|:---------------------------|
-| The UI5 type definitions (`*.d.ts` files) are loaded as dev dependency from [npm](https://www.npmjs.com/package/@types/openui5). They are a work in progress, so while they should be working well already, we are still improving them, which might also lead to breaking changes.<br/>
- The file [tsconfig.json](tsconfig.json) contains the configuration for the TypeScript compilation, including a reference to the UI5 `*.d.ts` files.<br/>
- Normally, the UI5 JavaScript files (controllers, Component.js etc.) would reside in the `webapp` folder. Now they are in the [src](src) folder. The TypeScript compilation will create the `webapp` folder and put all output there. <br/>
- In addition to the TypeScript compilation, there is also a conversion from the ES6 module and class syntax used in the source files to the classic UI5 module loading and class definition syntax (`sap.ui.define(...)` and `superClass.extend(...)`). This conversion is using the [babel-plugin-transform-modules-ui5](https://github.com/ui5-community/babel-plugin-transform-modules-ui5) project from the UI5 Community (initially developed by Ryan Murphy). <br/> 
- Both, the TypeScript compilation and the ES6 syntax transformation, are executed by Babel, as configured in the file [.babelrc.json](.babelrc.json)<br/> 
- This combined transformation is triggered by both the `build:ts` and `watch:ts` scripts in [package.json](package.json). |
+This simplifies the test code a lot and at the same time avoids type complications in TypeScript caused by OPA APIs not fitting a typed language. 
+All other testing code is converted from JavaScript in the same way as regular application code is (i.e. using real ECMAScript classes and modules).
 
+The *setup* difference is in the configuration to instrument code for coverage reporting: the `istanbul` library needs to be added to the Babel config of `ui5-tooling-transpile-middleware` in `ui5.yaml`.
+
+Details can be found in the later sections of [step-by-step.md](step-by-step.md).
+
+> Note: the test setup is now using the [`ui5-test-runner`](https://github.com/ArnaudBuchholz/ui5-test-runner) instead of deprecated `karma`.
 
 
 ## Requirements
 
 Either [npm](https://www.npmjs.com/), [yarn](https://yarnpkg.com/), or [pnpm](https://pnpm.io/) for dependency management.
 
-## Download and Installation
+## Setup
 
 1. Clone the project:
 
@@ -67,6 +75,17 @@ As shown in the terminal after executing this command, the app is then running o
 ## Debug the App
 
 In the browser, you can directly debug the original TypeScript code, which is supplied via sourcemaps (need to be enabled in the browser's developer console if it does not work straight away). If the browser doesn't automatically jump to the TypeScript code when setting breakpoints, use e.g. `Ctrl`/`Cmd` + `P` in Chrome to open the `*.ts` file you want to debug.
+
+## Run the Tests
+
+The tests can be executed either manually or in an automated way using [`ui5-test-runner`](https://github.com/ArnaudBuchholz/ui5-test-runner):
+
+1. *Manual execution*: use `npm start` and then execute the tests by opening the [testsuite](http://localhost:8080/test/testsuite.qunit.html) at [http://localhost:8080/test/testsuite.qunit.html](http://localhost:8080/test/testsuite.qunit.html) in your browser. You can also directly launch the [QUnit tests](http://localhost:8080/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=unit/unitTests) or the [Integration tests](http://localhost:8080/test/Test.qunit.html?testsuite=test-resources/ui5/typescript/helloworld/testsuite.qunit&test=integration/opaTests) individually.
+<!-- 2. *Test-driven* development by running Karma in watch mode using `npm run karma` (which triggers the test each time a source file changes) -->
+2. *Headless testing*: launch test-runner either *without* coverage reporting using `npm run test-runner` or *with* coverage using `npm run test-runner-coverage`.
+While the tests are running, their status can be monitored at http://localhost:8081/_/progress.html
+
+> Note: when the application to test is passed using the `--url` argument (as we do it in this sample), then there is [no "watch" mode of the ui5-test-runner so far](https://github.com/ArnaudBuchholz/ui5-test-runner/issues/119), which automatically re-runs the tests when a resource changes. 
 
 ## Build the App
 
@@ -122,6 +141,7 @@ npm run lint
 ## Limitations
 
 - At this time, the used eslint rules are not verified to be optimal or to be in sync with UI5 recommendations.
+- In the future there might be further improvements to how tests are written and configured.
 
 ## Known Issues
 
@@ -131,16 +151,15 @@ None.
 
 The sample code is provided **as-is**. No support is provided.
 
-[Create an issue](https://github.com/SAP-samples/ui5-typescript-helloworld/issues) in this repository if you find a bug.
+[Create an issue](https://github.com/SAP-samples/ui5-typescript-helloworld/issues) in this repository if you find a bug in the sample app code or documentation.
+
+For issues in the UI5 type definitions which are caused by the dts-generator please open [issues in the dts-generator's repository](https://github.com/SAP/ui5-typescript/issues).<br>
+
+Issues in the UI5 type definitions which are also present in the [API documentation](https://ui5.sap.com/#/api) originate from the JSDoc comments in the original OpenUI5/SAPUI5 code, so please directly open an [OpenUI5](https://github.com/SAP/openui5/issues)/SAPUI5 ticket for those.
+
 Questions can be [asked in SAP Community](https://answers.sap.com/questions/ask.html).
-
-<!-- ## Contributing -->
-
-## References
-
-Once you have understood the setup and want to inspect the code of a slightly more comprehensive UI5 app written in TypeScript, you can check out the [TypeScript version of the UI5 CAP Event App Sample](https://github.com/SAP-samples/ui5-cap-event-app/tree/typescript).
 
 ## License
 
-Copyright (c) 2023 SAP SE or an SAP affiliate company. All rights reserved.
+Copyright (c) 2023-2025 SAP SE or an SAP affiliate company. All rights reserved.
 This project is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSE) file.
