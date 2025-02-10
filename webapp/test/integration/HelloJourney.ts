@@ -1,5 +1,6 @@
 import opaTest from "sap/ui/test/opaQunit";
 import AppPage from "./pages/AppPage";
+import QUnit from "sap/ui/thirdparty/qunit-2";
 
 const onTheAppPage = new AppPage();
 
@@ -13,16 +14,16 @@ opaTest("Should open the Hello dialog", function () {
 		}
 	});
 
-	// Actions
+	// Action
 	onTheAppPage.iPressTheSayHelloWithDialogButton();
 
-	// Assertions
+	// Assertion
 	onTheAppPage.iShouldSeeTheHelloDialog();
 
-	// Actions
+	// Action
 	onTheAppPage.iPressTheOkButtonInTheDialog();
 
-	// Assertions
+	// Assertion
 	onTheAppPage.iShouldNotSeeTheHelloDialog();
 
 	// Cleanup

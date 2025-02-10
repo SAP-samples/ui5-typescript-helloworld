@@ -1,4 +1,5 @@
 import AppController from "ui5/typescript/helloworld/controller/App.controller";
+import QUnit from "sap/ui/thirdparty/qunit-2";
 
 QUnit.module("Sample App controller test");
 

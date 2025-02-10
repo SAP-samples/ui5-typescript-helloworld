@@ -9,14 +9,15 @@
     "build": "ui5 build --clean-dest",
     "build:opt": "ui5 build self-contained --clean-dest --all",
     "start": "ui5 serve --port 8080 -o index.html",
+    "start-coverage": "ui5 serve --port 8080 --config ui5-coverage.yaml",
     "start:dist": "ui5 serve  --port 8080 -o index.html --config ui5-dist.yaml",
     "ts-typecheck": "tsc --noEmit",
     "lint": "eslint webapp",
-    "ui5lint": "ui5lint",
-    "karma": "karma start",
-    "karma-ci": "karma start karma-ci.conf.js",
-    "karma-ci-cov": "karma start karma-ci-cov.conf.js",
-    "test": "npm run lint && npm run karma-ci-cov"
+    "test-runner": "ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html",
+    "test-runner-coverage": "ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 80 -ccs 80",
+    "test-ui5": "ui5-test-runner --start start-coverage --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 80 -ccs 80",
+    "test": "npm run lint && npm run test-ui5",
+    "ui5lint": "ui5lint"
   },
   "repository": {
     "type": "git",
@@ -26,18 +27,15 @@
     "@types/openui5": "1.131.0",
     "@ui5/cli": "^4",
     "@ui5/linter": "^1.1.1",
-    "eslint": "^9.17.0",
+    "babel-plugin-istanbul": "^7.0.0",
+    "eslint": "^9.19.0",
     "globals": "^15.14.0",
-    "karma": "^6.4.4",
-    "karma-chrome-launcher": "^3.2.0",
-    "karma-coverage": "^2.2.1",
-    "karma-ui5": "^4.1.0",
-    "karma-ui5-transpile": "^3",
     "rimraf": "^6.0.1",
-    "typescript": "^5.7.2",
+    "typescript": "^5.7.3",
     "typescript-eslint": "^8.18.1",
     "ui5-middleware-livereload": "^3",
     "ui5-middleware-simpleproxy": "^3",
+    "ui5-test-runner": "^5.4.3",
     "ui5-tooling-transpile": "^3"
   }
 }
