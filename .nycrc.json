@@ -1,7 +1,0 @@
-{
-    "all": true,
-    "sourceMap": false,
-    "exclude": [
-        "**/test/**/*.ts"
-    ]
-}
