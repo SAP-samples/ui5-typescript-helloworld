@@ -23,5 +23,8 @@ tsconfig.tsbuildinfo
 # Dependency directories
 node_modules/
 
-# build results
+# build/test results
 dist
+coverage
+report
+.nyc_output
