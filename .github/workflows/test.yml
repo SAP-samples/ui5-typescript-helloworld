@@ -1,0 +1,29 @@
+name: Test and Checks
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# No permissions are required for this workflow
+permissions: {}
+
+jobs:
+  test:
+    name: General checks, tests and build
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Install dependencies
+      run: npm i
+
+    - name: Perform checks and tests
+      run: npm test
