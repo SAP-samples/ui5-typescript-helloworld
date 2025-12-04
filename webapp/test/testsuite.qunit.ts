@@ -1,3 +1,5 @@
+import type {SuiteConfiguration} from "sap/ui/test/starter/config"; // Available since UI5 1.142
+
 export default {
 	name: "Testsuite for the TypesScript Hello World app",
 	defaults: {
@@ -27,4 +29,4 @@ export default {
 			title: "Integration tests for the TypeScript Hello World app"
 		},
 	}
-};
+} satisfies SuiteConfiguration;

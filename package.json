@@ -23,7 +23,7 @@
     "url": "https://github.com/SAP-samples/ui5-typescript-helloworld.git"
   },
   "devDependencies": {
-    "@types/openui5": "1.131.0",
+    "@types/openui5": "1.142.0",
     "@ui5/cli": "^4",
     "@ui5/linter": "^1.5.0",
     "babel-plugin-istanbul": "^7.0.0",
