@@ -16,7 +16,9 @@
     "test-runner-coverage": "ui5-test-runner --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 80 -ccs 80",
     "test-ui5": "ui5-test-runner --start start-coverage --url http://localhost:8080/test/testsuite.qunit.html --coverage -ccb 60 -ccf 100 -ccl 80 -ccs 80",
     "test": "npm run lint && npm run test-ui5",
-    "ui5lint": "ui5lint"
+    "ui5lint": "ui5lint",
+    "lint:lockfile": "lockfile-lint --type npm --path package-lock.json --allowed-hosts npm --validate-https",
+    "setup": "npx puppeteer browsers install chrome"
   },
   "repository": {
     "type": "git",
@@ -24,16 +26,17 @@
   },
   "devDependencies": {
     "@types/openui5": "1.142.0",
-    "@ui5/cli": "^4",
-    "@ui5/linter": "^1.5.0",
-    "babel-plugin-istanbul": "^7.0.0",
-    "eslint": "^9.19.0",
-    "globals": "^15.14.0",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.18.1",
-    "ui5-middleware-livereload": "^3",
-    "ui5-middleware-simpleproxy": "^3",
-    "ui5-test-runner": "^5.4.3",
-    "ui5-tooling-transpile": "^3"
+    "@ui5/cli": "4.0.53",
+    "@ui5/linter": "1.21.1",
+    "babel-plugin-istanbul": "7.0.0",
+    "eslint": "9.19.0",
+    "globals": "15.14.0",
+    "lockfile-lint": "5.0.0",
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.59.4",
+    "ui5-middleware-livereload": "3.3.0",
+    "ui5-middleware-simpleproxy": "3.7.0",
+    "ui5-test-runner": "5.13.1",
+    "ui5-tooling-transpile": "3.11.0"
   }
 }

@@ -584,6 +584,14 @@ To automate the execution of the QUnit/OPA tests, we are using [`ui5-test-runner
 npm install --save-dev ui5-test-runner
 ```
 
+`ui5-test-runner` uses [Puppeteer](https://pptr.dev/) to run a headless Chrome browser. Because this project uses `ignore-scripts=true` in `.npmrc` (to block potentially malicious postinstall scripts from transitive dependencies), Chrome is not downloaded automatically. You need to install it once:
+
+```sh
+npx puppeteer browsers install chrome
+```
+
+This downloads Chrome to `~/.cache/puppeteer/`. It only needs to be re-run when Puppeteer is upgraded to a version requiring a newer Chrome.
+
 While `ui5-test-runner` can launch the app in its legacy mode, it requires the app to be available at a given URL in normal mode. Either start the app first (if not running) in a different terminal, then afterwards the test-runner:
 
 ```sh

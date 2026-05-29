@@ -62,6 +62,14 @@ cd ui5-typescript-helloworld
 npm install
 ```
 
+3. Install the browser needed for headless testing:
+
+```sh
+npm run setup
+```
+
+This downloads Chrome for Puppeteer. It's only needed once (the browser is cached in `~/.cache/puppeteer`) and again after Puppeteer version upgrades. This step is separate because `ignore-scripts=true` in `.npmrc` blocks automatic postinstall scripts for supply-chain security.
+
 ## Run the App
 
 Execute the following command to run the app locally for development in watch mode (the browser reloads the app automatically when there are changes in the source code):
