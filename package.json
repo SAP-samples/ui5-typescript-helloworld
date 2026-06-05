@@ -28,7 +28,7 @@
     "@types/openui5": "1.142.0",
     "@ui5/cli": "4.0.53",
     "@ui5/linter": "1.21.1",
-    "babel-plugin-istanbul": "7.0.0",
+    "babel-plugin-istanbul": "8.0.0",
     "eslint": "9.19.0",
     "globals": "15.14.0",
     "lockfile-lint": "5.0.0",
