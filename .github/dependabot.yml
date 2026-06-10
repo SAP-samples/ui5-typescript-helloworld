@@ -18,6 +18,8 @@ updates:
       non-major:
         patterns: ["*"]
         update-types: ["minor", "patch"]
+    ignore:
+      - dependency-name: "@openui5/types"
     labels:
       - "dependencies"
 

@@ -76,14 +76,10 @@ Note that the scope of this tutorial is the TypeScript setup of a project, not t
 Now, let's get the TypeScript compiler and the UI5 type definitions as dev dependencies:
 
 ```sh
-npm install --save-dev typescript @types/openui5
+npm install --save-dev typescript @openui5/types
 ```
 
-When you are developing a SAPUI5 application (i.e. also using control libraries which are not available in OpenUI5), use the `@sapui5/types` types instead of the `@types/openui5` ones.
-
-> **Remark:** There are also `@openui5/types` available - how do they differ from the `@types/openui5` ones?<br>
-The content is basically the same, one difference is in versioning: while the types in the `@openui5` namespace are exactly in sync with the respective OpenUI5 patch release, the ones in the `@types` namespace follow the [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) versioning and are only released *once* per minor release of OpenUI5 ([more details here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/openui5#versioning)), not for every patch. In practice, it shouldn't make a noticeable difference which you use, but note that in the `@types` namespace there is usually only the `*.*.0` patch release available.<br>
-> The SAPUI5 types are not available in the `@types` namespace.
+When you are developing a SAPUI5 application (i.e. also using control libraries which are not available in OpenUI5), use the `@sapui5/types` types instead of the `@openui5/types` ones.
 
 To trigger the first TypeScript transpilation in this project, now execute
 
@@ -105,7 +101,7 @@ To configure the transpiler properly, we need to add a `tsconfig.json` configura
     "compilerOptions": {
         "target": "es2023",
         "module": "es2022",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "skipLibCheck": true,
         "allowJs": true,
         "strict": true,
@@ -114,22 +110,14 @@ To configure the transpiler properly, we need to add a `tsconfig.json` configura
         "paths": {
             "ui5/typescript/helloworld/*": ["./webapp/*"]
         },
+        "types": [
+            "@openui5/types"
+        ],
         "composite": true
     },
     "include": ["./webapp/**/*"]
 }
 ```
-
-> **Note:** when you use the `@sapui5/types` or `@openui5/types` types instead, you need to add the following section to tsconfig.json:
->
-> ```json
->        "types": [
->            "@sapui5/types"
->        ],
->```
-> (or `@openui5/types`, respectively)
->
-> Why? TypeScript automatically finds all type definition files in a dependency starting with `@types/...` (i.e. all `.d.ts` files in `node_modules/@types/...`). The SAPUI5 types are only available in a package starting with `@sapui5/...`, hence TypeScript must be explicitly pointed to these types. Note that this disables the automatic loading of other types from `node_modules/@types/...`, so any additional types also need to be added to this list.
 
 There are additional settings in this file, e.g. telling the compiler which files to compile (all matching `./webapp/**/*`) and how the modules should be resolved (`"moduleResolution": "node"`). And a couple of compiler options which are not so important right now. They determine how exactly the compiler should behave. The "paths" section informs TypeScript about the mapping of namespaces used in the app.
 
@@ -181,12 +169,11 @@ npm install --save-dev eslint typescript-eslint
 ESLint needs to be told which plug-ins to use and which JavaScript language level the code should have, so create a `eslint.config.mjs` file in the project root with these settings:
 
 ```js
-import eslint from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-	eslint.configs.recommended,
+	tseslint.configs.eslintRecommended,
 	...tseslint.configs.recommended,
 	...tseslint.configs.recommendedTypeChecked,
 	{
@@ -256,7 +243,7 @@ metadata:
 type: application
 framework:
   name: OpenUI5
-  version: "1.142.0"
+  version: "1.148.0"
   libraries:
     - name: sap.m
     - name: sap.ui.core
@@ -455,7 +442,7 @@ resources:
       webapp: dist
 framework:
   name: OpenUI5
-  version: "1.142.0"
+  version: "1.148.0"
   libraries:
     - name: sap.m
     - name: sap.ui.core
@@ -564,7 +551,7 @@ Apart from this, the implementation of the actions and assertions is done just l
 
 ## 12. Enable TypeScript support for the Test Code
 
-To make TypeScript aware of the additional module paths for the `unit` and the `integration` test code, we need to extend the `paths` information of the `tsconfig.json` with the following entries:
+To make TypeScript aware of the additional module paths for the `unit` and the `integration` test code, we need to extend the `paths` information of the `tsconfig.json` with the following entries; also add the QUnit type definitions:
 
 ```json
         "paths": {
@@ -572,6 +559,15 @@ To make TypeScript aware of the additional module paths for the `unit` and the `
             "unit/*": ["./webapp/test/unit/*"],
             "integration/*": ["./webapp/test/integration/*"]
         },
+        "types": [
+            "@openui5/types", "@types/qunit"
+        ],
+```
+
+The QUnit type definitions also need to be added as dev dependency:
+
+```sh
+npm i --save-dev @types/qunit
 ```
 
 Now you should be able to get proper code completion support for your QUnit and OPA tests.

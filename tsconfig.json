@@ -2,18 +2,20 @@
   "compilerOptions": {
   "target": "es2023",
     "module": "es2022",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "skipLibCheck": true,
     "allowJs": true,
     "strict": true,
     "strictPropertyInitialization": false,
     "rootDir": "./webapp",
-    "baseUrl": "./",
     "paths": {
       "ui5/typescript/helloworld/*": ["./webapp/*"],
       "unit/*": ["./webapp/test/unit/*"],
       "integration/*": ["./webapp/test/integration/*"]
     },
+    "types": [
+        "@openui5/types", "@types/qunit"
+    ],
     "composite": true
   },
   "include": ["./webapp/**/*"]

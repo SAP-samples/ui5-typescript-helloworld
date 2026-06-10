@@ -18,7 +18,7 @@ If you are *not* here for understanding the setup, then:
 
 ## Overview of TypeScript-related Entities
 
-- The UI5 type definitions (`*.d.ts` files) are loaded as dev dependency from [npm](https://www.npmjs.com/package/@types/openui5).
+- The UI5 type definitions (`*.d.ts` files) are loaded as dev dependency from [npm](https://www.npmjs.com/package/@openui5/types).
 - The file [tsconfig.json](tsconfig.json) contains the configuration for the TypeScript compilation, including a reference to the UI5 `*.d.ts` files.
 -  The TypeScript-to-JavaScript transpilation is done by [`ui5-tooling-transpile`](https://www.npmjs.com/package/ui5-tooling-transpile), which acts as both a build plugin (build results are stored in the `dist` folder) and middleware (the UI5 dev server transpiles the TypeScript files from `webapp` before sending it to the browser). Under the hood it uses the [Babel](https://babeljs.io/) transpiler.
 - In addition to the TypeScript compilation, there is also a conversion from the ES6 module and class syntax used in the source files to the classic UI5 module loading and class definition syntax (`sap.ui.require(...)`/`sap.ui.define(...)` and `SuperClass.extend(...)`). This conversion is also done by `ui5-tooling-transpile`, using the [babel-plugin-transform-modules-ui5](https://github.com/ui5-community/babel-plugin-transform-modules-ui5) project from the UI5 Community (initially developed by Ryan Murphy).

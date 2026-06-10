@@ -1,5 +1,5 @@
 {
-	"_version": "1.68.0",
+	"_version": "2.0.0",
 
 	"sap.app": {
 		"id": "ui5.typescript.helloworld",
@@ -37,7 +37,7 @@
 		},
 
 		"dependencies": {
-			"minUI5Version": "1.104.0",
+			"minUI5Version": "1.148.0",
 			"libs": {
 				"sap.ui.core": {},
 				"sap.ui.layout": {},
