@@ -27,17 +27,17 @@
   "devDependencies": {
     "@openui5/types": "1.148.0",
     "@types/qunit": "2.19.14",
-    "@ui5/cli": "4.0.55",
-    "@ui5/linter": "1.21.2",
+    "@ui5/cli": "4.0.57",
+    "@ui5/linter": "1.23.1",
     "babel-plugin-istanbul": "8.0.0",
-    "eslint": "10.4.1",
-    "globals": "17.6.0",
+    "eslint": "10.6.0",
+    "globals": "17.7.0",
     "lockfile-lint": "5.0.0",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.60.1",
+    "typescript-eslint": "8.62.0",
     "ui5-middleware-livereload": "3.3.1",
     "ui5-middleware-simpleproxy": "3.8.0",
     "ui5-test-runner": "5.13.1",
-    "ui5-tooling-transpile": "3.11.2"
+    "ui5-tooling-transpile": "3.11.3"
   }
 }
